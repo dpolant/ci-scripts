@@ -1,0 +1,7 @@
+{
+    "name": "mediacurrent/ci-scripts",
+    "description": "Scripts helpful for testing a Drupal site on a Continuous-Integration server, or locally.",
+    "bin": [
+        "scripts/vagrant-init.sh"
+    ]
+}
