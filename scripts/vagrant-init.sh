@@ -1,16 +1,22 @@
 #!/bin/bash
 
-if [[ ! -d box ]]; then
-  git clone -b feature/MCT-12-subdirectory git@bitbucket.org:mediacurrent/mis_vagrant.git ./box
+BASE_DIR=$(pwd -P)
+
+if [[ ! -d ${BASE_DIR}/box ]]; then
+  git clone -b feature/MCT-12-subdirectory git@bitbucket.org:mediacurrent/mis_vagrant.git ${BASE_DIR}/box
+else
+  cd ${BASE_DIR}/box
+  git pull --rebase
+  cd ${BASE_DIR}
 fi
 
-if [[ ! -f ./config/drupal-vm.config.yml ]]; then
-  if [[ ! -d ./config ]]; then
-    mkdir ./config
+if [[ ! -f ${BASE_DIR}/config/drupal-vm.config.yml ]]; then
+  if [[ ! -d ${BASE_DIR}/config ]]; then
+    mkdir ${BASE_DIR}/config
   fi
-  cp ./box/example.config.yml ./config/drupal-vm.config.yml
+  cp ${BASE_DIR}/box/example.config.yml ${BASE_DIR}/config/drupal-vm.config.yml
 fi
 
-if [[ ! -f Vagrantfile ]]; then
-  cp ./box/Vagrantfile.parent ./Vagrantfile
+if [[ ! -f ${BASE_DIR}/Vagrantfile ]]; then
+  cp ${BASE_DIR}/box/Vagrantfile.parent ${BASE_DIR}/Vagrantfile
 fi
