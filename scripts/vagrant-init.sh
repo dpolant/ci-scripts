@@ -4,10 +4,6 @@ BASE_DIR=$(pwd -P)
 
 if [[ ! -d ${BASE_DIR}/box ]]; then
   git clone -b feature/MCT-12-subdirectory git@bitbucket.org:mediacurrent/mis_vagrant.git ${BASE_DIR}/box
-else
-  cd ${BASE_DIR}/box
-  git pull --rebase
-  cd ${BASE_DIR}
 fi
 
 if [[ ! -f ${BASE_DIR}/config/drupal-vm.config.yml ]]; then
