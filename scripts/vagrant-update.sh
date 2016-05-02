@@ -25,6 +25,9 @@ if [[ ! -f ${BASE_DIR}/Vagrantfile ]]; then
   cp ${BASE_DIR}/box/Vagrantfile.parent ${BASE_DIR}/Vagrantfile
 fi
 
+# Ensure the latest vagrant box is downloaded
+vagrant box update
+
 # Fetch ansible roles used by Drupal VM
 if [ $(command -v ansible-galaxy) ]; then
   sudo ansible-galaxy install -r ${BASE_DIR}/box/provisioning/requirements.yml --force
