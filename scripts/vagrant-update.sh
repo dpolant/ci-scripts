@@ -27,5 +27,6 @@ fi
 
 # Fetch ansible roles used by Drupal VM
 if [ $(command -v ansible-galaxy) ]; then
+  echo "Download all required ansible roles."
   sudo ansible-galaxy install -r ${BASE_DIR}/box/provisioning/requirements.yml --force
 fi
