@@ -6,24 +6,7 @@ if [ ! -z $1 ]; then
   BASE_DIR=$1
 fi
 
-if [[ -d ${BASE_DIR}/box ]]; then
-  cd ${BASE_DIR}/box
-  git pull --rebase
-  cd ${BASE_DIR}
-else
-  git clone -b feature/MCT-12-subdirectory git@bitbucket.org:mediacurrent/mis_vagrant.git ${BASE_DIR}/box
-fi
-
-if [[ ! -f ${BASE_DIR}/config/drupal-vm.config.yml ]]; then
-  if [[ ! -d ${BASE_DIR}/config ]]; then
-    mkdir ${BASE_DIR}/config
-  fi
-  cp ${BASE_DIR}/box/example.config.yml ${BASE_DIR}/config/drupal-vm.config.yml
-fi
-
-if [[ ! -f ${BASE_DIR}/Vagrantfile ]]; then
-  cp ${BASE_DIR}/box/Vagrantfile.parent ${BASE_DIR}/Vagrantfile
-fi
+source  ${SCRIPT_DIR}/vagrant-init.sh
 
 # Ensure the latest vagrant box is downloaded
 vagrant box update
@@ -31,5 +14,5 @@ vagrant box update
 # Fetch ansible roles used by Drupal VM
 if [ $(command -v ansible-galaxy) ]; then
   echo "Download all required ansible roles."
-  sudo ansible-galaxy install -r ${BASE_DIR}/box/provisioning/requirements.yml --force
+  ansible-galaxy install -p ${BASE_DIR}/vendor/mediacurrent/mis_vagrant/provisioning/roles -r ${BASE_DIR}/vendor/mediacurrent/mis_vagrant/provisioning/requirements.yml --force
 fi
