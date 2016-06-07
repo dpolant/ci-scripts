@@ -10,9 +10,11 @@ if [[ ! -f ${BASE_DIR}/config/config.yml ]]; then
   if [[ ! -d ${BASE_DIR}/config ]]; then
     mkdir ${BASE_DIR}/config
   fi
-  cp ${SCRIPT_DIR}/../files/example.config.yml ${BASE_DIR}/config/config.yml
+  echo "Ensure the vagrant configuration file is installed."
+  cp ${BASE_DIR}/vendor/mediacurrent/mis_vagrant/default.config.yml ${BASE_DIR}/config/config.yml
 fi
 
 if [[ ! -f ${BASE_DIR}/Vagrantfile ]]; then
+  echo "Ensure the Vagrantfile file is installed."
   cp ${SCRIPT_DIR}/../files/Vagrantfile.parent ${BASE_DIR}/Vagrantfile
 fi
