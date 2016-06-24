@@ -5,8 +5,6 @@ namespace Mediacurrent\CiScripts\Command;
 trait Project
 {
 
-    use \JoeStewart\RoboDrupalVM\Task\loadTasks;
-
 	/**
      * Project Init task.
      *
@@ -14,14 +12,9 @@ trait Project
      */
     public function projectInit()
     {
-
-        $this->taskVmInit()
-            ->drupalvmPackage($this->drupalvm_package)
-            ->configFile()
-            ->vagrantFile()
-            ->run();
         $this->taskProjectInit()
-            ->drupalvmPackage($this->drupalvm_package)
+            ->vmInit($this->drupalvm_package)
+            ->testsInit()
             ->run();
     }
 
