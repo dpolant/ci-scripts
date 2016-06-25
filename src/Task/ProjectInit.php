@@ -44,9 +44,28 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
                 ->run();
 
         }
-
         return $this;
     }
+
+    public function vagrantInit($vagrant_hostname = null, $vagrant_ip = null) {
+            if($vagrant_hostname) {
+            $this->taskReplaceInFile($this->getVagrantConfig())
+                ->from('example.mcdev')
+                ->to($vagrant_hostname)
+                ->run();
+            $this->taskReplaceInFile($this->getVagrantConfig())
+                ->from('example_mcdev')
+                ->to(str_replace('.', '_', $vagrant_hostname))
+                ->run();
+            }
+            if($vagrant_ip) {
+            $this->taskReplaceInFile($this->getVagrantConfig())
+                ->from('192.168.50.4')
+                ->to($vagrant_ip)
+                ->run();
+            }
+            return $this;
+        }
 
     /**
      * @return Result
