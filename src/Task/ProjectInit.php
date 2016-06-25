@@ -18,7 +18,7 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
         $this->taskVmInit()
             ->drupalvmPackage($drupalvm_package)
             ->configFile()
-            ->vagrantFile()
+            ->vagrantFile($drupalvm_package)
             ->run();
         return $this;
     }
