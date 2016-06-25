@@ -24,7 +24,7 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function vagrantUp() {
-        $result = $this->taskVagrantStatus()->run()->getMessage();
+        $result = $this->taskVagrantStatus()->printed(false)->run()->getMessage();
         if(!strpos($result, "The VM is running")) {
             $this->taskVagrantUp()->run();
         }

@@ -21,7 +21,7 @@ trait Project
     {
         $this->taskProjectInit()
             ->vmInit($this->drupalvm_package)
-            ->vagrantInit($vagrant_hostname, $vagrant_ip)
+            ->vagrantConfig($vagrant_hostname, $vagrant_ip)
             ->testsInit()
             ->run();
     }
