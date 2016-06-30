@@ -12,6 +12,7 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
 {
     use Timer;
     use ResourceExistenceChecker;
+    use \JoeStewart\RoboDrupalVM\Task\loadTasks;
     use \JoeStewart\Robo\Task\Vagrant\loadTasks;
     use \Boedah\Robo\Task\Drush\loadTasks;
     use \Mediacurrent\CiScripts\Task\loadTasks;
@@ -24,6 +25,13 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function vagrantUp() {
+
+        if(!is_file($this->getProjectRoot() . 'Vagrantfile')) {
+            $this->taskVmInit()
+                ->vagrantFile('mediacurrent/mis_vagrant')
+                ->run();
+        }
+
         $result = $this->taskVagrantStatus()->printed(false)->run()->getMessage();
         if(!strpos($result, "The VM is running")) {
             $this->taskVagrantUp()->run();
