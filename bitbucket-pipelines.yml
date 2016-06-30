@@ -13,7 +13,7 @@ pipelines:
           - composer --version
           - phpunit --version
           - composer --verbose install
-          - ls -l ./bin
+          - ls -l ./vendor/bin
           - ./vendor/bin/robo --version
           - ./vendor/bin/robo list
           - ./vendor/bin/robo test
