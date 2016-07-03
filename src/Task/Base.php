@@ -5,7 +5,7 @@ namespace Mediacurrent\CiScripts\Task;
 
 use Robo\Contract\TaskInterface;
 
-abstract class Base extends \Robo\Tasks implements TaskInterface
+abstract class Base extends \Robo\Task\BaseTask
 {
     
     private $vendor_dir;
@@ -116,7 +116,7 @@ abstract class Base extends \Robo\Tasks implements TaskInterface
         return $this->getProjectRoot() . '/vendor/' . $this->drupalvm_package . '/' . $this->config_source_filename;
     }
 
-    public function getConfigValue($variable_name) {
+    public function getDrupalVMConfigValue($variable_name) {
         return $this->configuration[$variable_name];
     }
 }
