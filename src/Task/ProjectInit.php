@@ -2,7 +2,7 @@
 
 namespace Mediacurrent\CiScripts\Task;
 
-
+use Robo\Common\ExecOneCommand;
 use Robo\Result;
 use Robo\Common\ResourceExistenceChecker;
 use Robo\Common\Timer;
@@ -10,7 +10,6 @@ use Robo\Common\TaskIO;
 
 class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
 {
-    use Timer;
     use ResourceExistenceChecker;
     use \JoeStewart\RoboDrupalVM\Task\loadTasks;
     use \Robo\Task\Base\loadTasks;

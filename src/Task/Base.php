@@ -5,9 +5,11 @@ namespace Mediacurrent\CiScripts\Task;
 
 use Robo\Contract\TaskInterface;
 
+
 abstract class Base extends \Robo\Task\BaseTask
 {
-    
+    use \Robo\Common\ExecOneCommand;
+
     private $vendor_dir;
     private $vendor_bin;
     private $config_dir;
@@ -92,12 +94,12 @@ abstract class Base extends \Robo\Task\BaseTask
     }
 
     public function getComposerConfig( $setting) {
-      $value = $this->taskExec('composer')
-          ->arg('config ' . $setting . ' --absolute --working-dir=' . $this->getProjectRoot())
-          ->printed(false)
-          ->run()
-          ->getMessage();
-      return str_replace("\n", '', $value);
+        $isPrinted = isset($this->isPrinted) ? $this->isPrinted : false;
+        $this->isPrinted = false;
+        $result = $this->executeCommand('composer config ' . $setting . ' --absolute --working-dir=' . $this->getProjectRoot());
+        $value = $result->getMessage();
+        $this->isPrinted = $isPrinted;
+        return str_replace("\n", '', $value);
     }
 
     public function getVagrantConfig() {
