@@ -9,12 +9,10 @@ use Robo\Contract\CommandInterface;
 use Robo\Contract\TaskInterface;
 use Robo\Contract\PrintedInterface;
 use Robo\Exception\TaskException;
-use Robo\Common\Timer;
 
 class Project extends \Mediacurrent\CiScripts\Task\Base
 {
-    use Timer;
- 
+
     /**
      * @return Result
      */
