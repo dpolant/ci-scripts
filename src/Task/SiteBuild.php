@@ -5,13 +5,13 @@ namespace Mediacurrent\CiScripts\Task;
 
 use Robo\Result;
 use Robo\Common\ResourceExistenceChecker;
-use Robo\Common\Timer;
 use Robo\Common\TaskIO;
 
 class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
 {
-    use Timer;
     use ResourceExistenceChecker;
+    use \Robo\Task\Composer\loadTasks;
+    use \Robo\Task\FileSystem\loadTasks;
     use \JoeStewart\RoboDrupalVM\Task\loadTasks;
     use \JoeStewart\Robo\Task\Vagrant\loadTasks;
     use \Boedah\Robo\Task\Drush\loadTasks;

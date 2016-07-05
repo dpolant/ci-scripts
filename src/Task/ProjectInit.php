@@ -13,6 +13,8 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
     use ResourceExistenceChecker;
     use \JoeStewart\RoboDrupalVM\Task\loadTasks;
     use \Robo\Task\Base\loadTasks;
+    use \Robo\Task\File\loadTasks;
+    use \Robo\Task\FileSystem\loadTasks;
     use \Robo\Task\Remote\loadTasks;
 
     public function vmInit($drupalvm_package) {
