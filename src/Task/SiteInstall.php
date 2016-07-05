@@ -10,7 +10,6 @@ use Robo\Common\TaskIO;
 
 class SiteInstall extends \Mediacurrent\CiScripts\Task\Base
 {
-    use Timer;
     use ResourceExistenceChecker;
     use \Boedah\Robo\Task\Drush\loadTasks;
 
