@@ -5,7 +5,7 @@
         "scripts/vagrant-init.sh"
     ],
     "require": {
-        "joestewart/robo-drupalvm": "^0.1.1",
+        "joestewart/robo-drupalvm": "^0.1.3",
         "joestewart/robo-vagrant": "^0.1.1",
         "boedah/robo-drush": "^2.2"
     },
