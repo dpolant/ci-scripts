@@ -1,7 +1,7 @@
 <?php
 
 // Vagrant local development vm.
-$aliases['mcdev'] = array(
+$aliases['example.mcdev'] = array(
   'uri' => 'example.mcdev',
   'root' => '/home/vagrant/docroot/web',
   'path-aliases' => array(
@@ -11,7 +11,7 @@ $aliases['mcdev'] = array(
 );
 
 if('vagrant' !== getenv('USER')) {
-  $aliases['mcdev']['remote-host'] = 'example.mcdev';
-  $aliases['mcdev']['remote-user'] = 'vagrant';
-  $aliases['mcdev']['ssh-options'] = '-o PasswordAuthentication=no -i ${HOME}/.vagrant.d/insecure_private_key';
+  $aliases['example.mcdev']['remote-host'] = 'example.mcdev';
+  $aliases['example.mcdev']['remote-user'] = 'vagrant';
+  $aliases['example.mcdev']['ssh-options'] = '-o PasswordAuthentication=no -i ${HOME}/.vagrant.d/insecure_private_key';
 }
