@@ -15,7 +15,9 @@ trait loadTasks
             [
                 'taskProjectInit' => ProjectInit::class,
                 'taskSiteBuild' => SiteBuild::class,
+                'taskSiteInstall' => SiteConfigImport::class,
                 'taskSiteInstall' => SiteInstall::class,
+                'taskSiteUpdate' => SiteUpdate::class,
             ]
         );
     }
@@ -37,6 +39,14 @@ trait loadTasks
     }
 
     /**
+     * @return SiteConfigImport
+     */
+    protected function taskSiteConfigImport()
+    {
+        return new SiteConfigImport();
+    }
+
+    /**
      * @return SiteInstall
      */
     protected function taskSiteInstall()
@@ -44,4 +54,11 @@ trait loadTasks
         return new SiteInstall();
     }
 
+    /**
+     * @return SiteUpdate
+     */
+    protected function taskSiteUpdate()
+    {
+        return new SiteUpdate();
+    }
 }

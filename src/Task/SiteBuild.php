@@ -39,31 +39,37 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
         return $this;
     }
 
-    /**
-     * @return Result
-     */
-    public function run()
-    {
-        $this->startTimer();
+    public function siteInstall() {
         if(is_dir($this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'])) {
             $this->taskFileSystemStack()
-                ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
-                ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
-                ->run();
+              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
+              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
+              ->run();
         }
 
         $this->taskSiteInstall()->run();
 
         if(is_dir($this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'])) {
             $this->taskFileSystemStack()
-                ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
-                ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
-                ->run();
+              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
+              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
+              ->run();
         }
 
         $this->taskFileSystemStack()
-            ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'] . '/files', 0777, 0000, true)
-            ->run();
+          ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'] . '/files', 0777, 0000, true)
+          ->run();
+        
+        return $this;
+    }
+
+    /**
+     * @return Result
+     */
+    public function run()
+    {
+        $this->startTimer();
+
         $this->stopTimer();
         return new Result(
             $this,
