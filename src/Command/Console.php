@@ -8,6 +8,9 @@ trait Console
     /**
      * Drupal Console command.
      *
+     * Wrapper for Drupal Console that adds the uri and root arguments.
+     * The uri and root arguments are calculated from the project directory
+     * and the config.yml file.
      *
      * @return object Result
      */
