@@ -14,7 +14,6 @@ class SiteUpdate extends \Mediacurrent\CiScripts\Task\Base
     use \Robo\Task\FileSystem\loadTasks;
     use \JoeStewart\RoboDrupalVM\Task\loadTasks;
     use \JoeStewart\Robo\Task\Vagrant\loadTasks;
-    use \Boedah\Robo\Task\Drush\loadTasks;
     use \Mediacurrent\CiScripts\Task\loadTasks;
 
     public function composerInstall() {
@@ -25,12 +24,17 @@ class SiteUpdate extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function configImport() {
-        $this->taskSiteConfigImport()
-          ->run();
+        $this->taskConsole()
+            ->consoleCommand('config:import')
+            ->run();
         return $this;
     }
 
     public function vagrantUp() {
+
+        if(!$this->useVagrant()) {
+            return $this;
+        }
 
         if(!is_file($this->getProjectRoot() . 'Vagrantfile')) {
             $this->taskVmInit()
@@ -46,10 +50,10 @@ class SiteUpdate extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function updateDb() {
-        $this->taskDrushStack()
-          ->siteAlias('@' . $this->configuration['vagrant_hostname'])
-          ->updateDb()
-          ->run();
+        $this->taskConsole()
+            ->consoleCommand('update:execute')
+            ->arg('all')
+            ->run();
         return $this;
     }
 

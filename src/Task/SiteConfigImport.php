@@ -11,7 +11,7 @@ use Robo\Common\TaskIO;
 class SiteConfigImport extends \Mediacurrent\CiScripts\Task\Base
 {
     use ResourceExistenceChecker;
-    // use \Boedah\Robo\Task\Drush\loadTasks;
+    use \Mediacurrent\CiScripts\Task\loadTasks;
 
     /**
      * @return Result
@@ -21,24 +21,12 @@ class SiteConfigImport extends \Mediacurrent\CiScripts\Task\Base
         $this->startTimer();
         chdir($this->getWebRoot());
         $drush_alias =  '@' . $this->configuration['vagrant_hostname'];
-        /*
-        $dbconnection_string = $this->configuration['drupal_mysql_user'] .':' . $this->configuration['drupal_mysql_password'] . '@localhost/' . $this->configuration['vagrant_machine_name'];
-        $this->taskDrushStack()
-            ->siteAlias('@' . $this->configuration['vagrant_hostname'])
-            ->sitesSubdir($this->configuration['vagrant_hostname'])
-            ->mysqlDbUrl($dbconnection_string)
-            ->siteName($this->configuration['drupal_site_name'])
-            ->siteMail('admin@example.com')
-            ->accountMail('admin@example.com')
-            ->accountName($this->configuration['drupal_account_name'])
-            ->accountPass($this->configuration['drupal_account_pass'])
-            ->siteInstall($this->configuration['drupal_install_profile'])
-            ->run();
-        $this->stopTimer();
-        */
         $isPrinted = isset($this->isPrinted) ? $this->isPrinted : false;
         // $this->isPrinted = false;
-        $result = $this->executeCommand('drush ' . $drush_alias . ' config-import -y');
+        // $result = $this->executeCommand('drush ' . $drush_alias . ' config-import -y');
+        $result = $this->taskConsole()
+            ->consoleCommand('config:import')
+            ->run();
         $value = $result->getMessage();
         $this->isPrinted = $isPrinted;
         return new Result(

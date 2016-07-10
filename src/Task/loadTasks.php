@@ -13,13 +13,21 @@ trait loadTasks
     {
         return new SimpleServiceProvider(
             [
+                'taskConsole' => Console::class,
                 'taskProjectInit' => ProjectInit::class,
                 'taskSiteBuild' => SiteBuild::class,
-                'taskSiteInstall' => SiteConfigImport::class,
                 'taskSiteInstall' => SiteInstall::class,
                 'taskSiteUpdate' => SiteUpdate::class,
             ]
         );
+    }
+
+    /**
+     * @return Console
+     */
+    protected function taskConsole()
+    {
+        return new Console();
     }
 
     /**
@@ -36,14 +44,6 @@ trait loadTasks
     protected function taskSiteBuild()
     {
         return new SiteBuild();
-    }
-
-    /**
-     * @return SiteConfigImport
-     */
-    protected function taskSiteConfigImport()
-    {
-        return new SiteConfigImport();
     }
 
     /**

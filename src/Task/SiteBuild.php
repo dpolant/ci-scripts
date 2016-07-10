@@ -26,6 +26,10 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
 
     public function vagrantUp() {
 
+        if(!$this->useVagrant()) {
+            return $this;
+        }
+
         if(!is_file($this->getProjectRoot() . 'Vagrantfile')) {
             $this->taskVmInit()
                 ->vagrantFile('mediacurrent/mis_vagrant')
