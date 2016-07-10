@@ -4,20 +4,10 @@ namespace Mediacurrent\CiScripts\Task;
 
 
 use Robo\Result;
-use Robo\Common\ResourceExistenceChecker;
-use Robo\Common\TaskIO;
 
 class Console extends \Mediacurrent\CiScripts\Task\Base
 {
-    use ResourceExistenceChecker;
-    use \Robo\Task\Base\loadTasks;
-    use \Robo\Task\Composer\loadTasks;
-    use \Robo\Task\FileSystem\loadTasks;
     use \Robo\Task\Remote\loadTasks;
-    use \JoeStewart\RoboDrupalVM\Task\loadTasks;
-    use \JoeStewart\Robo\Task\Vagrant\loadTasks;
-    use \Boedah\Robo\Task\Drush\loadTasks;
-    use \Mediacurrent\CiScripts\Task\loadTasks;
 
     protected $arg;
     protected $console_command;
