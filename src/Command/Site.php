@@ -6,7 +6,7 @@ trait Site
 {
 
     /**
-     * Site Build task.
+     * Site Build command.
      *
      * site:build runs the following -
      *
@@ -24,11 +24,12 @@ trait Site
         $this->taskSiteBuild()
             ->composerInstall()
             ->vagrantUp()
+            ->siteInstall()
             ->run();
     }
 
     /**
-     * Site Install task.
+     * Site Install command.
      *
      * site:install runs drush site-install with configuration from config/config.yml
      *
@@ -39,4 +40,26 @@ trait Site
         $this->taskSiteInstall()->run();
     }
 
+    /**
+     * Site Update command.
+     *
+     * site:update runs the following -
+     *
+     *  composer install
+     *  vagrant up if required
+     *  drush config-import
+     *  drush updatedb
+     *
+     * @return object Result
+     */
+    public function siteUpdate()
+    {
+        $this->taskSiteUpdate()
+
+          ->composerInstall()
+          ->vagrantUp()
+          ->configImport()
+          ->updateDB()
+          ->run();
+    }
 }

@@ -21,7 +21,7 @@ class SiteInstall extends \Mediacurrent\CiScripts\Task\Base
         $this->startTimer();
         chdir($this->getWebRoot());
         $dbconnection_string = $this->configuration['drupal_mysql_user'] .':' . $this->configuration['drupal_mysql_password'] . '@localhost/' . $this->configuration['vagrant_machine_name'];
-        $this->taskDrushStack()
+        $this->taskDrushStack($this->getDrush())
             ->siteAlias('@' . $this->configuration['vagrant_hostname'])
             ->sitesSubdir($this->configuration['vagrant_hostname'])
             ->mysqlDbUrl($dbconnection_string)

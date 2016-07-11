@@ -13,11 +13,21 @@ trait loadTasks
     {
         return new SimpleServiceProvider(
             [
+                'taskConsole' => Console::class,
                 'taskProjectInit' => ProjectInit::class,
                 'taskSiteBuild' => SiteBuild::class,
                 'taskSiteInstall' => SiteInstall::class,
+                'taskSiteUpdate' => SiteUpdate::class,
             ]
         );
+    }
+
+    /**
+     * @return Console
+     */
+    protected function taskConsole()
+    {
+        return new Console();
     }
 
     /**
@@ -44,4 +54,11 @@ trait loadTasks
         return new SiteInstall();
     }
 
+    /**
+     * @return SiteUpdate
+     */
+    protected function taskSiteUpdate()
+    {
+        return new SiteUpdate();
+    }
 }
