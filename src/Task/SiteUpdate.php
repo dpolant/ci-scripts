@@ -7,19 +7,25 @@ use Robo\Result;
 use Robo\Common\ResourceExistenceChecker;
 use Robo\Common\TaskIO;
 
-class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
+class SiteUpdate extends \Mediacurrent\CiScripts\Task\Base
 {
     use ResourceExistenceChecker;
     use \Robo\Task\Composer\loadTasks;
     use \Robo\Task\FileSystem\loadTasks;
     use \JoeStewart\RoboDrupalVM\Task\loadTasks;
     use \JoeStewart\Robo\Task\Vagrant\loadTasks;
-    use \Boedah\Robo\Task\Drush\loadTasks;
     use \Mediacurrent\CiScripts\Task\loadTasks;
 
     public function composerInstall() {
         $this->taskComposerInstall()
             ->dir($this->getProjectRoot())
+            ->run();
+        return $this;
+    }
+
+    public function configImport() {
+        $this->taskConsole()
+            ->consoleCommand('config:import')
             ->run();
         return $this;
     }
@@ -43,27 +49,11 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
         return $this;
     }
 
-    public function siteInstall() {
-        if(is_dir($this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'])) {
-            $this->taskFileSystemStack()
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
-              ->run();
-        }
-
-        $this->taskSiteInstall()->run();
-
-        if(is_dir($this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'])) {
-            $this->taskFileSystemStack()
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
-              ->run();
-        }
-
-        $this->taskFileSystemStack()
-          ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'] . '/files', 0777, 0000, true)
-          ->run();
-        
+    public function updateDb() {
+        $this->taskConsole()
+            ->consoleCommand('update:execute')
+            ->arg('all')
+            ->run();
         return $this;
     }
 
@@ -72,9 +62,6 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
      */
     public function run()
     {
-        $this->startTimer();
-
-        $this->stopTimer();
         return new Result(
             $this,
             0,
