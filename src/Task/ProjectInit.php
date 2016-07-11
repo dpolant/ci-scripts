@@ -26,7 +26,7 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
         return $this;
     }
 
-    public function testsInit() {
+    public function testsInit($vagrant_hostname = null) {
         $this->taskRsync()
             ->fromPath($this->getVendorDir() . '/mediacurrent/ci-tests/tests')
             ->toPath($this->getProjectRoot())
@@ -43,7 +43,7 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
                 ->run();
                 $this->taskReplaceInFile($this->getProjectRoot() . '/tests/behat/behat.local.yml')
                 ->from('base_url:')
-                ->to('base_url: http://' . $this->configuration['vagrant_hostname'])
+                ->to('base_url: http://' . $vagrant_hostname)
                 ->run();
 
         }

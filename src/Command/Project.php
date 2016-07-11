@@ -22,7 +22,7 @@ trait Project
         $this->taskProjectInit()
             ->vmInit($this->drupalvm_package)
             ->vagrantConfig($vagrant_hostname, $vagrant_ip)
-            ->testsInit()
+            ->testsInit($vagrant_hostname)
             ->run();
     }
 
