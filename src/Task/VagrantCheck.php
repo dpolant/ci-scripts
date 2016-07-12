@@ -76,7 +76,7 @@ class VagrantCheck extends \Mediacurrent\CiScripts\Task\Base
 
     public function pluginInstall() {
         $result = $this->taskVagrantPlugin()
-          ->list()
+          ->listPlugins()
           ->run();
         $value = $result->getMessage();
 
