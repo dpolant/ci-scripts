@@ -18,6 +18,7 @@ trait loadTasks
                 'taskSiteInstall' => SiteConfigImport::class,
                 'taskSiteInstall' => SiteInstall::class,
                 'taskSiteUpdate' => SiteUpdate::class,
+                'taskVagrantCheck' => VagrantCheck::class,
             ]
         );
     }
@@ -60,5 +61,13 @@ trait loadTasks
     protected function taskSiteUpdate()
     {
         return new SiteUpdate();
+    }
+
+    /**
+     * @return VagrantCheck
+     */
+    protected function taskVagrantCheck()
+    {
+        return new VagrantCheck();
     }
 }
