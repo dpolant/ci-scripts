@@ -44,26 +44,35 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function siteInstall() {
-        if(is_dir($this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'])) {
+
+        $site_directory = $this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'];
+
+        if(is_dir($site_directory)) {
             $this->taskFileSystemStack()
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
-              ->run();
+                ->chmod($site_directory, 0755)
+                ->chmod($site_directory . '/settings.php', 0644)
+                ->run();
+        } else {
+            $this->taskFileSystemStack()
+                ->mkdir($site_directory)
+                ->copy($this->getProjectRoot() .'/web/sites/example.settings.local.php', $site_directory . '/settings.php')
+                ->run();
         }
 
         $this->taskSiteInstall()->run();
 
-        if(is_dir($this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'])) {
+        if(is_dir($site_directory)) {
             $this->taskFileSystemStack()
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
-              ->run();
+                ->chmod($site_directory, 0755)
+                ->chmod($site_directory . '/settings.php', 0644)
+                ->run();
         }
-
-        $this->taskFileSystemStack()
-          ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'] . '/files', 0777, 0000, true)
-          ->run();
-        
+       
+        if(is_dir($site_directory . '/files')) {
+            $this->taskFileSystemStack()
+                ->chmod($site_directory . '/files', 0777, 0000, true)
+                ->run();
+        }
         return $this;
     }
 
