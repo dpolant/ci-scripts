@@ -11,6 +11,7 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
 {
     use ResourceExistenceChecker;
     use \Robo\Task\Composer\loadTasks;
+    use \Robo\Task\File\loadTasks;
     use \Robo\Task\FileSystem\loadTasks;
     use \JoeStewart\RoboDrupalVM\Task\loadTasks;
     use \JoeStewart\Robo\Task\Vagrant\loadTasks;
@@ -44,26 +45,52 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function siteInstall() {
-        if(is_dir($this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'])) {
+
+        $site_directory = $this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'];
+
+        if(is_dir($site_directory)) {
             $this->taskFileSystemStack()
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
-              ->run();
+                ->chmod($site_directory, 0755)
+                ->chmod($site_directory . '/settings.php', 0644)
+                ->run();
+        } else {
+            $this->taskFileSystemStack()
+                ->mkdir($site_directory)
+                ->run();
+
+            $this->taskConcat([
+                    $this->getProjectRoot() .'/web/sites/default/default.settings.php',
+                    $this->getProjectRoot() .'/web/sites/example.settings.local.php',
+                ])
+                ->to($site_directory . '/settings.php')
+                ->run();
+
+            $text = <<<EOF
+if (file_exists(__DIR__ . '/settings.local.php')) {
+  include __DIR__ . '/settings.local.php';
+}
+EOF;
+            $this->taskWriteToFile($site_directory . '/settings.php')
+                ->append(true)
+                ->text($text)
+                ->replace("\n<?php\n", '')
+                ->run();
         }
 
         $this->taskSiteInstall()->run();
 
-        if(is_dir($this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'])) {
+        if(is_dir($site_directory)) {
             $this->taskFileSystemStack()
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'], 0755)
-              ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration    ['vagrant_hostname'] . '/settings.php', 0644)
-              ->run();
+                ->chmod($site_directory, 0755)
+                ->chmod($site_directory . '/settings.php', 0644)
+                ->run();
         }
 
-        $this->taskFileSystemStack()
-          ->chmod( $this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'] . '/files', 0777, 0000, true)
-          ->run();
-        
+        if(is_dir($site_directory . '/files')) {
+            $this->taskFileSystemStack()
+                ->chmod($site_directory . '/files', 0777, 0000, true)
+                ->run();
+        }
         return $this;
     }
 
