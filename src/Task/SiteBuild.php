@@ -11,6 +11,7 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
 {
     use ResourceExistenceChecker;
     use \Robo\Task\Composer\loadTasks;
+    use \Robo\Task\File\loadTasks;
     use \Robo\Task\FileSystem\loadTasks;
     use \JoeStewart\RoboDrupalVM\Task\loadTasks;
     use \JoeStewart\Robo\Task\Vagrant\loadTasks;
@@ -55,7 +56,24 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
         } else {
             $this->taskFileSystemStack()
                 ->mkdir($site_directory)
-                ->copy($this->getProjectRoot() .'/web/sites/example.settings.local.php', $site_directory . '/settings.php')
+                ->run();
+
+            $this->taskConcat([
+                    $this->getProjectRoot() .'/web/sites/default/default.settings.php',
+                    $this->getProjectRoot() .'/web/sites/example.settings.local.php',
+                ])
+                ->to($site_directory . '/settings.php')
+                ->run();
+
+            $text = <<<EOF
+if (file_exists(__DIR__ . '/settings.local.php')) {
+  include __DIR__ . '/settings.local.php';
+}
+EOF;
+            $this->taskWriteToFile($site_directory . '/settings.php')
+                ->append(true)
+                ->text($text)
+                ->replace("\n<?php\n", '')
                 ->run();
         }
 
@@ -67,7 +85,7 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
                 ->chmod($site_directory . '/settings.php', 0644)
                 ->run();
         }
-       
+
         if(is_dir($site_directory . '/files')) {
             $this->taskFileSystemStack()
                 ->chmod($site_directory . '/files', 0777, 0000, true)
