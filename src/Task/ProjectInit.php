@@ -17,7 +17,14 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
     use \Robo\Task\FileSystem\loadTasks;
     use \Robo\Task\Remote\loadTasks;
 
+    public function __construct() {
+        $this->startTimer();
+        parent::__construct();
+
+    }
+
     public function drushAlias() {
+
         $drushalias_filename = $this->configuration['vagrant_hostname'] . '.aliases.drushrc.php';
         $drushalias_source = $this->getVendorDir() . '/mediacurrent/ci-scripts/files/example.mcdev.aliases.drushrc.php';
         $drushalias_dest = $this->getProjectRoot() . '/drush/' . $drushalias_filename;
@@ -109,6 +116,9 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
           ->configFile()
           ->vagrantFile($drupalvm_package)
           ->run();
+
+        $this->loadDrupalVMConfiguration();
+
         return $this;
     }
 
@@ -117,7 +127,6 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
      */
     public function run()
     {
-        $this->startTimer();
         $this->stopTimer();
         return new Result(
             $this,
