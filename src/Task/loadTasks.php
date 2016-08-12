@@ -40,6 +40,22 @@ trait loadTasks
     }
 
     /**
+     * @return ReleaseBuild
+     */
+    protected function taskReleaseBuild()
+    {
+        return new ReleaseBuild();
+    }
+
+    /**
+     * @return ReleaseDeploy
+     */
+    protected function taskReleaseDeploy()
+    {
+        return new ReleaseDeploy();
+    }
+
+    /**
      * @return SiteBuild
      */
     protected function taskSiteBuild()

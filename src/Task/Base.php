@@ -30,8 +30,7 @@ abstract class Base extends \Robo\Task\BaseTask
         $this->configSourceFilename('default.config.yml');
 
         if (file_exists($this->getVagrantConfig($config_file))) {
-          $contents = file_get_contents($this->getVagrantConfig($config_file));
-          $this->configuration = \Symfony\Component\Yaml\Yaml::parse($contents);
+            $this->loadDrupalVMConfiguration($config_file);
         }
     }
 
@@ -132,6 +131,11 @@ abstract class Base extends \Robo\Task\BaseTask
         $value = $result->getMessage();
         $this->isPrinted = $isPrinted;
         return $value;
+    }
+
+    public function loadDrupalVMConfiguration($config_file = null) {
+        $contents = file_get_contents($this->getVagrantConfig($config_file));
+        $this->configuration = \Symfony\Component\Yaml\Yaml::parse($contents);
     }
 }
 
