@@ -59,12 +59,18 @@ trait Release
      *
      * @param string $deploy_host Host for Deployment ( Acquia, Pantheon)
      *
+     * @param array $opts
+     *
+     * @option $yes Deploy immediately without confirmation
+     *
      * @return object Result
      */
-    public function releaseDeploy($deploy_host = null)
+    public function releaseDeploy($deploy_host = null, $opts = ['yes|y' => false])
     {
-        $this->taskReleaseDeploy()
-            ->releaseDeploy($deploy_host)
-            ->run();
+        if ( $opts['yes'] || $this->confirm("Deploy release now. Are you sure?")) {
+            $this->taskReleaseDeploy()
+                ->releaseDeploy($deploy_host)
+                ->run();
+        }
     }
 }
