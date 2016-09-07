@@ -1,0 +1,86 @@
+<?php
+
+namespace Mediacurrent\CiScripts\Task;
+
+use Robo\Result;
+use Robo\Exception\TaskException;
+
+class Drush extends \Mediacurrent\CiScripts\Task\Base
+{
+    use \Robo\Task\Base\loadTasks;
+    use \Robo\Task\Remote\loadTasks;
+
+    protected $arg;
+    protected $drush_command;
+    protected $drush_options;
+    protected $root;
+    protected $uri;
+
+    public function arg($arg = null) {
+        $this->arg = $arg;
+
+        return $this;
+    }
+
+    public function drushCommand($drush_command = null) {
+        $this->drush_command = $drush_command;
+
+        return $this;
+    }
+
+    public function drushOptions($drush_options = null) {
+        $this->drush_options = $drush_options;
+
+        return $this;
+    }
+
+    public function getCommand($pathToInstallDir = null, $uri = null) {
+
+        if (!$pathToInstallDir) {
+             $pathToInstallDir = $this->configuration['drupal_composer_install_dir'];
+        }
+
+        $drush = $pathToInstallDir . '/bin/drush';
+        $root = $pathToInstallDir . '/web';
+        if(!$uri) {
+            $uri = 'http://' . $this->configuration['vagrant_hostname'];
+        }
+        $command = $drush . ' --uri=' . $uri . ' --root=' . $root . ' ' . $this->drush_command;
+        if($this->arg) {
+            $command .= ' ' . $this->arg;
+        }
+        if($this->drush_options) {
+            $command .= ' ' . $this->drush_options;
+        }
+
+        return $command;
+    }
+
+    /**
+     * @return Result
+     */
+    public function run()
+    {
+
+        $command = $this->getCommand();
+
+        $this->printTaskInfo($command);
+        if($this->useVagrant()) {
+            $this->taskSshExec($this->configuration['vagrant_hostname'], 'vagrant')
+                ->remoteDir($this->configuration['drupal_composer_install_dir'] . '/web/')
+                ->exec($command)
+                ->identityFile('~/.vagrant.d/insecure_private_key')
+                ->run();
+        }
+        else {
+            $this->taskExec($command)->run();
+        }
+        return new Result(
+            $this,
+            0,
+            'Drupal Drush',
+            ['time' => $this->getExecutionTime()]
+        );
+
+    }
+}
