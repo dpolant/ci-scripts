@@ -15,6 +15,14 @@ trait loadTasks
     }
 
     /**
+     * @return DatabaseImport
+     */
+    protected function taskDatabaseImport()
+    {
+        return new DatabaseImport();
+    }
+
+    /**
      * @return Drush
      */
     protected function taskDrush()
