@@ -96,12 +96,8 @@ abstract class Base extends \Robo\Task\BaseTask
     }
 
     public function getComposerConfig( $setting) {
-        $isPrinted = isset($this->isPrinted) ? $this->isPrinted : false;
-        $this->isPrinted = false;
-        $result = $this->executeCommand('composer config ' . $setting . ' --absolute --working-dir=' . $this->getProjectRoot());
-        $value = $result->getMessage();
-        $this->isPrinted = $isPrinted;
-        return str_replace("\n", '', $value);
+        $result = shell_exec('composer config ' . $setting . ' --absolute --working-dir=' . $this->getProjectRoot());
+        return str_replace("\n", '', $result);
     }
 
     public function getVagrantConfig() {
