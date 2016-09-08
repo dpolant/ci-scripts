@@ -125,12 +125,8 @@ abstract class Base extends \Robo\Task\BaseTask
     }
 
     public function useVagrant() {
-        $isPrinted = isset($this->isPrinted) ? $this->isPrinted : false;
-        $this->isPrinted = false;
-        $result = $this->executeCommand('command -v vagrant');
-        $value = $result->getMessage();
-        $this->isPrinted = $isPrinted;
-        return $value;
+        $result = shell_exec('command -v vagrant');
+        return $result;
     }
 
     public function loadDrupalVMConfiguration($config_file = null) {
