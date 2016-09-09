@@ -71,6 +71,14 @@ trait loadTasks
     }
 
     /**
+     * @return SiteTest
+     */
+    protected function taskSiteTest()
+    {
+        return new SiteTest();
+    }
+
+    /**
      * @return SiteUpdate
      */
     protected function taskSiteUpdate()
