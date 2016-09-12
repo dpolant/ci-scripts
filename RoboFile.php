@@ -8,6 +8,7 @@ class RoboFile extends \Robo\Tasks
     use \Mediacurrent\CiScripts\Task\loadTasks;
     use \Mediacurrent\CiScripts\Command\Project;
     use \Mediacurrent\CiScripts\Command\Site;
+    use \Mediacurrent\CiScripts\Command\Theme;
     use \Mediacurrent\CiScripts\Command\Vagrant;
 
     private $vm;
