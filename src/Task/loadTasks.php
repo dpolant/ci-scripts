@@ -87,6 +87,14 @@ trait loadTasks
     }
 
     /**
+     * @return Theme
+     */
+    protected function taskThemeStyleGuide()
+    {
+        return new Theme();
+    }
+
+    /**
      * @return VagrantCheck
      */
     protected function taskVagrantCheck()
