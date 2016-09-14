@@ -1,0 +1,134 @@
+<?php
+
+namespace Mediacurrent\CiScripts\Task;
+
+
+use Robo\Result;
+use Robo\Common\ResourceExistenceChecker;
+
+
+class SiteTest extends \Mediacurrent\CiScripts\Task\Base
+{
+    use ResourceExistenceChecker;
+    use \Robo\Task\Base\loadTasks;
+    use \Robo\Task\Testing\loadTasks;
+
+    protected $exit_code = 0;
+    protected $test_argument;
+    protected $test_options;
+
+    public function testArgument($test_argument = null) {
+        $this->test_argument = $test_argument;
+
+        return $this;
+    }
+
+    public function testOptions($test_options = null) {
+        $this->test_options = $test_options;
+
+        return $this;
+    }
+
+    public function behat($test_dir = null, $uri = null)
+    {
+
+        if(!$test_dir) {
+            $test_dir = $this->getProjectRoot() . '/tests/behat';
+        }
+
+        if(!is_dir($test_dir)) {
+            $this->printTaskInfo($test_dir . ' not found. Skipping behat tests');
+            $this->exit_code = 1;
+            return $this;
+        }
+
+        chdir($test_dir);
+        $cmd = $this->getVendorBin() . '/behat';
+
+        $result = $this->taskExec($cmd)->run();
+        return $this;
+    }
+
+    public function pa11y($uri = null)
+    {
+
+        if(!$uri) {
+            $uri = 'http://' . $this->configuration['vagrant_hostname'];
+        }
+
+        $cmd = 'pa11y --standard=WCAG2AA --ignore=WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail ' . $uri;
+
+        $this->taskExec($cmd)->run();
+        return $this;
+    }
+
+    public function phpcs($test_dir = null)
+    {
+
+        if(!$test_dir) {
+            $test_dir = $this->getWebRoot() . '/modules/custom';
+        }
+
+        if(!is_dir($test_dir)) {
+            $this->printTaskInfo($test_dir . ' not found. Skipping code sniffer tests');
+            return $this;
+        }
+
+        $phpcs = $this->getVendorBin() . '/phpcs';
+
+        $result = $this->executeCommand($phpcs . ' --config-show');
+        $value = $result->getMessage();
+
+        if(!strpos($value, 'coder_sniffer')) {
+            $this->taskExec($phpcs . ' --config-set installed_paths ' . $this->getVendorDir() . '/drupal/coder/coder_sniffer')->run();
+        }
+
+        $cmd = $phpcs . ' --standard=Drupal --extensions=php,module,inc,install,test,profile,theme ' . $test_dir;
+
+        $this->taskExec($cmd)->run();
+
+        return $this;
+    }
+
+    public function phpunit($test_dir = null)
+    {
+
+        if(!$test_dir) {
+            $test_dir = $this->getProjectRoot() . '/tests';
+        }
+
+        $this->taskPHPUnit($this->getVendorBin() . '/phpunit')
+          ->option('disallow-test-output')
+          ->option('report-useless-tests')
+          ->option('strict-coverage')
+          ->option('-v')
+          ->option('-d error_reporting=-1')
+          ->arg($test_dir)
+          ->run();
+
+        return $this;
+    }
+
+    /**
+     * @return Result
+     */
+    public function run()
+    {
+        $this->startTimer();
+
+        foreach($this->test_options as $option => $value) {
+          if($value && method_exists($this, $option)) {
+              $this->{$option}($this->test_argument);
+          }
+        }
+
+        $this->stopTimer();
+        return new Result(
+            $this,
+            $this->exit_code,
+            'SiteInstall',
+            ['time' => $this->getExecutionTime()]
+        );
+
+    }
+}
