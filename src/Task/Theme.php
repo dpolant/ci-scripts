@@ -21,6 +21,26 @@ class Theme extends \Mediacurrent\CiScripts\Task\Base
         parent::__construct();
     }
 
+    public function npmRunBuild()
+    {
+
+        $command = 'npm run build';
+        $this->taskExec($command)
+            ->dir($this->pathToTheme)
+            ->run();
+        return $this;
+    }
+
+    public function npmRunCompile()
+    {
+
+        $command = 'npm run compile';
+        $this->taskExec($command)
+            ->dir($this->pathToTheme)
+            ->run();
+        return $this;
+    }
+
     public function nvmUse()
     {
 
@@ -44,6 +64,16 @@ class Theme extends \Mediacurrent\CiScripts\Task\Base
     {
 
         $command = 'npm run styleguide';
+        $this->taskExec($command)
+            ->dir($this->pathToTheme)
+            ->run();
+        return $this;
+    }
+
+    public function npmRunWatch()
+    {
+
+        $command = 'npm run watch';
         $this->taskExec($command)
             ->dir($this->pathToTheme)
             ->run();

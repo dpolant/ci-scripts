@@ -89,7 +89,31 @@ trait loadTasks
     /**
      * @return Theme
      */
+    protected function taskThemeBuild()
+    {
+        return new Theme();
+    }
+
+   /**
+     * @return Theme
+     */
+    protected function taskThemeCompile()
+    {
+        return new Theme();
+    }
+
+    /**
+     * @return Theme
+     */
     protected function taskThemeStyleGuide()
+    {
+        return new Theme();
+    }
+
+    /**
+     * @return Theme
+     */
+    protected function taskThemeWatch()
     {
         return new Theme();
     }
