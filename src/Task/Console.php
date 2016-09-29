@@ -73,7 +73,9 @@ class Console extends \Mediacurrent\CiScripts\Task\Base
                 ->run();
         }
         else {
-            $this->taskExec($command)->run();
+            $this->taskExec($command)
+                ->dir($this->configuration['drupal_composer_install_dir'] . '/web/')
+                ->run();
         }
         return new Result(
             $this,
