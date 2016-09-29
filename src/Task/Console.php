@@ -35,7 +35,7 @@ class Console extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function getCommand($pathToInstallDir = null, $uri = null) {
-        
+
         if (!$pathToInstallDir) {
              $pathToInstallDir = $this->configuration['drupal_composer_install_dir'];
         }
@@ -45,7 +45,7 @@ class Console extends \Mediacurrent\CiScripts\Task\Base
         if(!$uri) {
             $uri = 'http://' . $this->configuration['vagrant_hostname'];
         }
-        $command = $console . ' --uri=' . $uri . ' --root=' . $root . ' ' . $this->console_command; 
+        $command = $console . ' --uri=' . $uri . ' --root=' . $root . ' ' . $this->console_command;
         if($this->arg) {
             $command .= ' ' . $this->arg;
         }
@@ -61,7 +61,7 @@ class Console extends \Mediacurrent\CiScripts\Task\Base
      */
     public function run()
     {
-        
+
         $command = $this->getCommand();
 
         $this->printTaskInfo($command);
