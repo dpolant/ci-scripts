@@ -22,6 +22,11 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
         $this->taskComposerInstall()
             ->dir($this->getProjectRoot())
             ->run();
+        if(!file_exists($this->getProjectRoot() . '/vendor/bin')) {
+            $this->taskFilesystemStack()
+                ->symlink('../bin', '../vendor/bin')
+                ->run();
+        }
         return $this;
     }
 
