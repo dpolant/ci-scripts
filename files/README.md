@@ -28,7 +28,7 @@ The initial pass of the build script downloads several dependencies and an inter
 
 ## Drush Alias
 * Use the project's [drush alias file](drush/{{ vagrant_hostname }}.aliases.drushrc.php)
-* Copy into your user's drush directory at ~/.drush/ for global use or customization.
+* Optionally copy into your user's drush directory at ~/.drush/ for global use or customization.
 
 ## Logging In
 * Use `drush @{{ vagrant_hostname }} uli` to login to your local installation.
