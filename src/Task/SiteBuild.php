@@ -74,6 +74,8 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
 if (file_exists(__DIR__ . '/settings.local.php')) {
   include __DIR__ . '/settings.local.php';
 }
+
+
 EOF;
             $this->taskWriteToFile($site_directory . '/settings.php')
                 ->append(true)
