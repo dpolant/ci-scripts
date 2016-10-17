@@ -20,7 +20,14 @@ class SiteInstall extends \Mediacurrent\CiScripts\Task\Base
     {
         $this->startTimer();
         chdir($this->getWebRoot());
-        $dbconnection_string = $this->configuration['drupal_db_user'] .':' . $this->configuration['drupal_db_password'] . '@localhost/' . $this->configuration['vagrant_machine_name'];
+        if(!empty($this->configuration['drupal_mysql_user'])) {
+            // deprecated - drupal_mysql_* is used in mis_vagrant < 3.3.0.
+            $dbconnection_string = $this->configuration['drupal_mysql_user'] .':' . $this->configuration['drupal_mysql_password'] . '@localhost/' . $this->configuration['vagrant_machine_name'];
+        }
+        else {
+            $dbconnection_string = $this->configuration['drupal_db_user'] .':' . $this->configuration['drupal_db_password'] . '@localhost/' . $this->configuration['vagrant_machine_name'];
+        }
+
         $this->taskDrushStack($this->getDrush())
             ->siteAlias('@' . $this->configuration['vagrant_hostname'])
             ->sitesSubdir($this->configuration['vagrant_hostname'])
