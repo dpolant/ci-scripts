@@ -41,7 +41,8 @@ class Drush extends \Mediacurrent\CiScripts\Task\Base
         }
 
         $drush = $pathToInstallDir . '/bin/drush';
-        $root = $pathToInstallDir . '/web';
+        $webroot = (isset($this->configuration['drupal_webroot'])) ? $this->configuration['drupal_webroot'] : 'web';
+        $root = $pathToInstallDir . '/' . $webroot;
         if(!$uri) {
             $uri = 'http://' . $this->configuration['vagrant_hostname'];
         }
@@ -65,9 +66,10 @@ class Drush extends \Mediacurrent\CiScripts\Task\Base
         $command = $this->getCommand();
 
         $this->printTaskInfo($command);
+        $webroot = (isset($this->configuration['drupal_webroot'])) ? $this->configuration['drupal_webroot'] : 'web';
         if($this->useVagrant()) {
             $this->taskSshExec($this->configuration['vagrant_hostname'], 'vagrant')
-                ->remoteDir($this->configuration['drupal_composer_install_dir'] . '/web/')
+                ->remoteDir($this->configuration['drupal_composer_install_dir'] . '/' . $webroot. '/')
                 ->exec($command)
                 ->identityFile('~/.vagrant.d/insecure_private_key')
                 ->run();

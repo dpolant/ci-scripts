@@ -84,7 +84,8 @@ abstract class Base extends \Robo\Task\BaseTask
     }
 
     public function getWebRoot() {
-      return $this->getProjectRoot() . '/web';
+        $webroot = (isset($this->configuration['drupal_webroot'])) ? $this->configuration['drupal_webroot'] : 'web';
+        return $this->getProjectRoot() . '/' . $webroot;
     }
 
     public function getTmpDir() {
