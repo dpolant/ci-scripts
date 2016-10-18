@@ -51,7 +51,8 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
 
     public function siteInstall() {
 
-        $site_directory = $this->getProjectRoot() .'/web/sites/' . $this->configuration['vagrant_hostname'];
+        $webroot = (isset($this->configuration['drupal_webroot'])) ? $this->configuration['drupal_webroot'] : 'web';
+        $site_directory = $this->getProjectRoot() .'/' . $webroot . '/sites/' . $this->configuration['vagrant_hostname'];
 
         if(is_dir($site_directory)) {
             $this->taskFileSystemStack()
@@ -64,8 +65,8 @@ class SiteBuild extends \Mediacurrent\CiScripts\Task\Base
                 ->run();
 
             $this->taskConcat([
-                    $this->getProjectRoot() .'/web/sites/default/default.settings.php',
-                    $this->getProjectRoot() .'/web/sites/example.settings.local.php',
+                    $this->getProjectRoot() . '/' . $webroot . '/sites/default/default.settings.php',
+                    $this->getProjectRoot() . '/' . $webroot . '/sites/example.settings.local.php',
                 ])
                 ->to($site_directory . '/settings.php')
                 ->run();
