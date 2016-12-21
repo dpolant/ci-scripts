@@ -102,6 +102,17 @@ class VagrantCheck extends \Mediacurrent\CiScripts\Task\Base
             }
         }
 
+        if(!strpos($value, 'vbguest')) {
+            $this->say('Recommended plugin Vagrant VBGuest not found.');
+            $this->say('More information: https://github.com/dotless-de/vagrant-vbguest');
+            if($this->confirm('Install vagrant-vbguest plugin now?')) {
+                $this->taskVagrantPlugin()
+                  ->install()
+                  ->arg('vagrant-vbguest')
+                  ->run();
+            }
+        }
+
         return $this;
     }
 
