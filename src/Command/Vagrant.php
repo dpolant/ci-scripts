@@ -20,6 +20,7 @@ trait Vagrant
           ->composerUpdate()
           ->osVersion()
           ->vagrantVersion()
+          ->ansibleVersion()
           ->boxUpdate()
           ->pluginInstall()
           ->run();

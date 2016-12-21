@@ -44,15 +44,7 @@ class VagrantCheck extends \Mediacurrent\CiScripts\Task\Base
 
     public function vagrantVersion() {
         $result = $this->taskVagrantVersion()->run();
-
         $vagrant_version = $result->getMessage();
-
-        if(strpos($vagrant_version, 'To upgrade to the latest version')) {
-            if(!strpos($this->os_version, 'ProductVersion:	10.11')) {
-                $this->say('Due to NFS sharing problems it is not advised to wait and upgrade to Vagrant >= 1.8.5');
-            }
-        }
-
         $this->taskExec('VBoxManage --version')->run();
 
         return $this;
@@ -103,6 +95,12 @@ class VagrantCheck extends \Mediacurrent\CiScripts\Task\Base
         }
 
         return $this;
+    }
+
+    public function ansibleVersion() {
+      $this->taskExec('ansible --version')->run();
+
+      return $this;
     }
 
     /**
