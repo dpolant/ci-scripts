@@ -98,7 +98,14 @@ class VagrantCheck extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function ansibleVersion() {
-      $this->taskExec('ansible --version')->run();
+      // Check if Ansible is installed and check the version, if it is.
+      $result = exec('command -v ansible');
+      if (!empty($result)) {
+          $this->taskExec('ansible --version')->run();
+      }
+      else {
+          $this->say('It appears that Ansible is not currently installed.');
+      }
 
       return $this;
     }
