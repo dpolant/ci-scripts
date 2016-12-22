@@ -195,6 +195,7 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
             ->exclude('tests')
             ->exclude('.git')
             ->exclude('.gitignore')
+            ->option('links')
             ->run();
 
         return $this;
