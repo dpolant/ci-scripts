@@ -23,21 +23,51 @@ trait Release
      * Requires the following variables be set
      * for the project in config/config.yml:
      *
-     * build_directory: build
-     * build_branch: 'develop'
      * project_repo: git@bitbucket.org:mediacurrent/mis_example.git
+     * project_drupal_root: web
      * release_repo: development10@svn.devcloud.hosting.acquia.com:development.git
+     * release_drupal_root: docroot
      * deploy_host: Acquia
      *
      * @param string $deploy_host Host for Deployment ( Acquia, Pantheon)
-     *
+     * @param string $build_branch Branch to build
+     * @param string $release_tag Optional label for release
      * @return object Result
      */
-    public function releaseBuild($deploy_host = null)
+    public function releaseBuild($deploy_host = null, $build_branch = 'develop', $release_tag = null)
     {
 
+        if(!$deploy_host && !empty($this->configuration['deploy_host'])) {
+            $deploy_host = $this->configuration['deploy_host'];
+        }
+
+        if(empty($this->configuration['project_repo'])
+            || empty($this->configuration['release_repo'])
+            || !$deploy_host) {
+
+            $this->say('Configuration variables missing.  Consult help output.');
+            return $this;
+        }
+
+        switch (strtolower($deploy_host)) {
+            case 'acquia':
+                $this->taskReleaseBuild()
+                    ->releaseBuildDirectories()
+                    ->releaseGitCheckout()
+                    ->releaseSyncProject()
+                    ->releaseSyncDocroot()
+                    ->releaseSetDocroot()
+                    ->releaseComposerInstall()
+                    ->releaseCleanupModuleVcs()
+                    ->releaseCommit()
+                    ;
+                break;
+
+            default:
+                break;
+        }
+
         $this->taskReleaseBuild()
-            ->releaseHost($deploy_host)
             ->run();
     }
 
