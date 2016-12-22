@@ -225,10 +225,14 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
     }
 
     public function releaseCleanupModuleVcs() {
-        $shell_cmd = 'find ./modules -type d | grep .git | xargs rm -rf';
+        $shell_cmd = 'find . -type d | grep .git | xargs rm -rf';
 
         $this->taskExec($shell_cmd)
             ->dir($this->release_docroot)
+            ->run();
+
+        $this->taskExec($shell_cmd)
+            ->dir($this->release_repo_dest . '/vendor')
             ->run();
 
         return $this;
