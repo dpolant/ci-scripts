@@ -123,16 +123,45 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         $this->printTaskInfo("\ncommit message = " . $this->commit_msg);
 
         if(exec('ls -1 ' . $this->release_repo_dest . '/.git')) {
-            $this->taskGitStack()
-                ->dir($this->release_repo_dest)
-                ->pull( 'origin', $this->configuration['build_branch'])
-                ->run();
+            chdir($this->release_repo_dest);
+
+            $local_branch = exec('git branch | grep ' . $this->configuration['build_branch']);
+            $remote_branch = exec('git branch -a | grep origin/' . $this->configuration['build_branch']);
+            if($local_branch || $remote_branch) {
+                $this->taskGitStack()
+                    ->dir($this->release_repo_dest)
+                    ->checkout($this->configuration['build_branch'])
+                    ->run();
+                if($remote_branch) {
+                    $this->taskGitStack()
+                        ->dir($this->release_repo_dest)
+                        ->pull( 'origin', $this->configuration['build_branch'])
+                        ->run();
+                }
+            }
+            else {
+                $this->taskExec( 'git checkout -b ' . $this->configuration['build_branch'])
+                    ->dir($this->release_repo_dest)
+                    ->run();
+            }
         }
         else {
             $this->taskGitStack()
                 ->cloneRepo($this->configuration['release_repo'], $this->release_repo_dest)
-                ->checkout($this->configuration['build_branch'])
                 ->run();
+
+             chdir($this->release_repo_dest);
+             if(exec('git branch -a | grep origin/' . $this->configuration['build_branch'])) {
+                 $this->taskGitStack()
+                     ->dir($this->release_repo_dest)
+                     ->checkout($this->configuration['build_branch'])
+                     ->run();
+             }
+             else {
+                 $this->taskExec( 'git checkout -b ' . $this->configuration['build_branch'])
+                     ->dir($this->release_repo_dest)
+                     ->run();
+             }
         }
 
         return $this;
