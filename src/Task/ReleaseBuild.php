@@ -39,8 +39,14 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         $this->project_repo_dest = $this->build_path . '/project_repo';
         $this->release_repo_dest = $this->build_path . '/release_repo';
         $this->project_drupal_root = 'web';
+        if(!empty($this->configuration['project_drupal_root'])) {
+             $this->project_drupal_root = $this->configuration['project_drupal_root'];
+        }
         $this->project_docroot = $this->project_repo_dest . '/' . $this->project_drupal_root;
         $this->release_drupal_root = 'web';
+        if(!empty($this->configuration['release_drupal_root'])) {
+             $this->release_drupal_root = $this->configuration['release_drupal_root'];
+        }
         $this->release_docroot = $this->release_repo_dest . '/' . $this->release_drupal_root;
     }
 
