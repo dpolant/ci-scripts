@@ -53,13 +53,13 @@ trait Release
             case 'acquia':
                 $this->taskReleaseBuild()
                     ->releaseBuildDirectories()
-                    ->releaseGitCheckout()
+                    ->releaseGitCheckout($build_branch, $release_tag)
                     ->releaseSyncProject()
                     ->releaseSyncDocroot()
                     ->releaseSetDocroot()
                     ->releaseComposerInstall()
                     ->releaseCleanupModuleVcs()
-                    ->releaseCommit()
+                    ->releaseCommit($release_tag)
                     ;
                 break;
 

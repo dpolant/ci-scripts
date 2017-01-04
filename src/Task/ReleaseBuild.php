@@ -103,19 +103,35 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         return $this;
     }
 
-    public function releaseGitCheckout()
+    public function releaseGitCheckout($build_branch = null, $release_tag = null)
     {
+
+        if(!$build_branch) {
+            $build_branch = $this->configuration['build_branch'];
+        }
+
         if(exec('ls -1 ' . $this->project_repo_dest . '/.git')) {
             $this->taskGitStack()
                 ->dir($this->project_repo_dest)
-                ->pull( 'origin', $this->configuration['build_branch'])
+                ->pull( 'origin', $build_branch)
+                ->checkout($build_branch)
                 ->run();
         }
         else {
             $this->taskGitStack()
                 ->cloneRepo($this->configuration['project_repo'], $this->project_repo_dest)
-                ->checkout($this->configuration['build_branch'])
+                ->checkout($build_branch)
                 ->run();
+        }
+
+        if($release_tag) {
+            $result = $this->taskGitStack()
+                ->dir($this->project_repo_dest)
+                ->checkout($release_tag)
+                ->run();
+            if(!$result->wasSuccessful()) {
+                exit(1);
+            }
         }
 
         $gitlog_cmd = 'cd ' . $this->project_repo_dest . ' && git log --format=%B -n 1';
@@ -125,22 +141,22 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         if(exec('ls -1 ' . $this->release_repo_dest . '/.git')) {
             chdir($this->release_repo_dest);
 
-            $local_branch = exec('git branch | grep ' . $this->configuration['build_branch']);
-            $remote_branch = exec('git branch -a | grep origin/' . $this->configuration['build_branch']);
+            $local_branch = exec('git branch | grep ' . $build_branch);
+            $remote_branch = exec('git branch -a | grep origin/' . $build_branch);
             if($local_branch || $remote_branch) {
                 $this->taskGitStack()
                     ->dir($this->release_repo_dest)
-                    ->checkout($this->configuration['build_branch'])
+                    ->checkout($build_branch)
                     ->run();
                 if($remote_branch) {
                     $this->taskGitStack()
                         ->dir($this->release_repo_dest)
-                        ->pull( 'origin', $this->configuration['build_branch'])
+                        ->pull( 'origin', $build_branch)
                         ->run();
                 }
             }
             else {
-                $this->taskExec( 'git checkout -b ' . $this->configuration['build_branch'])
+                $this->taskExec( 'git checkout -b ' . $build_branch)
                     ->dir($this->release_repo_dest)
                     ->run();
             }
@@ -151,14 +167,14 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
                 ->run();
 
              chdir($this->release_repo_dest);
-             if(exec('git branch -a | grep origin/' . $this->configuration['build_branch'])) {
+             if(exec('git branch -a | grep origin/' . $build_branch)) {
                  $this->taskGitStack()
                      ->dir($this->release_repo_dest)
-                     ->checkout($this->configuration['build_branch'])
+                     ->checkout($build_branch)
                      ->run();
              }
              else {
-                 $this->taskExec( 'git checkout -b ' . $this->configuration['build_branch'])
+                 $this->taskExec( 'git checkout -b ' . $build_branch)
                      ->dir($this->release_repo_dest)
                      ->run();
              }
@@ -238,7 +254,7 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         return $this;
     }
 
-    public function releaseCommit()
+    public function releaseCommit($release_tag = null)
     {
         $dir = $this->release_repo_dest;
         $git_status = shell_exec( 'cd ' . $dir . ' && git status');
@@ -251,10 +267,25 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
                 ->add('-Af')
                 ->run();
 
+            $commit_msg = $this->configuration['build_branch'];
+            if($release_tag) {
+                $commit_msg .= ' ' . $release_tag;
+            }
+            $commit_msg .= ' build at ' . date('c') . "\n";
+            $commit_msg .= $this->commit_msg;
+
             $this->taskGitStack()
                 ->dir($dir)
-                ->commit($this->commit_msg)
+                ->commit($commit_msg)
                 ->run();
+
+            if($release_tag) {
+                $this->taskGitStack()
+                ->dir($dir)
+                ->tag($release_tag)
+                ->run();
+            }
+
         }
 
         return $this;
