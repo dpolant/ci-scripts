@@ -32,6 +32,7 @@ trait Release
      * @param string $deploy_host Host for Deployment ( Acquia, Pantheon)
      * @param string $build_branch Branch to build
      * @param string $release_tag Optional label for release
+     *
      * @return object Result
      */
     public function releaseBuild($deploy_host = null, $build_branch = 'develop', $release_tag = null)
@@ -59,8 +60,7 @@ trait Release
                     ->releaseSetDocroot()
                     ->releaseComposerInstall()
                     ->releaseCleanupModuleVcs()
-                    ->releaseCommit($release_tag)
-                    ;
+                    ->releaseCommit($release_tag);
                 break;
 
             default:
@@ -88,19 +88,33 @@ trait Release
      * deploy_host: Acquia
      *
      * @param string $deploy_host Host for Deployment ( Acquia, Pantheon)
-     *
+     * @param string $build_branch Branch to build
+     * @param string $release_tag Optional label for release
      * @param array $opts
      *
      * @option $yes Deploy immediately without confirmation
      *
      * @return object Result
      */
-    public function releaseDeploy($deploy_host = null, $opts = ['yes|y' => false])
+    public function releaseDeploy($deploy_host = null, $build_branch = 'develop', $release_tag = null, $opts = ['yes|y' => false])
     {
         if ( $opts['yes'] || $this->confirm("Deploy release now. Are you sure?")) {
-            $this->taskReleaseDeploy()
-                ->releaseDeploy($deploy_host)
-                ->run();
+
+            if(!$deploy_host && !empty($this->configuration['deploy_host'])) {
+                $deploy_host = $this->configuration['deploy_host'];
+            }
+
+            switch (strtolower($deploy_host)) {
+                case 'acquia':
+                case 'git':
+                    $this->taskReleaseDeploy()
+                        ->releaseDeployGit($build_branch, $release_tag)
+                        ->run();
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }

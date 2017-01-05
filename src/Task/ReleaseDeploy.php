@@ -9,6 +9,7 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
 
     use \Robo\Task\Vcs\loadTasks;
 
+    private $build_path;
     private $release_repo_dest;
 
     public function __construct()
@@ -16,6 +17,11 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
         $this->startTimer();
 
         parent::__construct();
+
+        if(empty($this->configuration['build_directory'])) {
+            $this->configuration['build_directory'] = 'build';
+        }
+        $this->build_path = $this->getProjectRoot() . '/' . $this->configuration['build_directory'];
     }
 
    public function releaseDeploy($deploy_host = null)
@@ -38,13 +44,26 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
         return $this;
     }
 
-    public function releaseDeployGit()
+    public function releaseDeployGit($build_branch = null, $release_tag = null)
     {
+
+        $this->release_repo_dest = $this->build_path . '/release_repo';
+
+        if(!$build_branch) {
+            $build_branch = $this->configuration['build_branch'];
+        }
 
         if(exec('ls -1 ' . $this->release_repo_dest . '/.git')) {
             $this->taskGitStack()
                 ->dir($this->release_repo_dest)
-                ->push( 'origin', $this->configuration['build_branch'])
+                ->push( 'origin', $build_branch)
+                ->run();
+        }
+
+        if($release_tag) {
+            $this->taskGitStack()
+                ->dir($this->release_repo_dest)
+                ->push( 'origin', $release_tag)
                 ->run();
         }
 
