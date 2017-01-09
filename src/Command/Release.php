@@ -52,6 +52,8 @@ trait Release
 
         switch (strtolower($deploy_host)) {
             case 'acquia':
+            case 'git':
+            case 'pantheon':
                 $this->taskReleaseBuild()
                     ->releaseBuildDirectories()
                     ->releaseGitCheckout($build_branch, $release_tag)
