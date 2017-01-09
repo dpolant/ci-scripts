@@ -105,6 +105,14 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
 
     public function releaseGitCheckout($build_branch = null, $release_tag = null)
     {
+        $this->releaseGitCheckoutProject($build_branch, $release_tag);
+        $this->releaseGitCheckoutRelease($build_branch);
+
+        return $this;
+    }
+
+    public function releaseGitCheckoutProject($build_branch = null, $release_tag = null)
+    {
 
         if(!$build_branch) {
             $build_branch = $this->configuration['build_branch'];
@@ -138,6 +146,16 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         $this->commit_msg = shell_exec( $gitlog_cmd);
         $this->printTaskInfo("\ncommit message = " . $this->commit_msg);
 
+        return $this;
+    }
+
+    public function releaseGitCheckoutRelease($build_branch = null, $release_tag = null)
+    {
+
+        if(!$build_branch) {
+            $build_branch = $this->configuration['build_branch'];
+        }
+
         if(exec('ls -1 ' . $this->release_repo_dest . '/.git')) {
             chdir($this->release_repo_dest);
 
@@ -166,18 +184,28 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
                 ->cloneRepo($this->configuration['release_repo'], $this->release_repo_dest)
                 ->run();
 
-             chdir($this->release_repo_dest);
-             if(exec('git branch -a | grep origin/' . $build_branch)) {
-                 $this->taskGitStack()
-                     ->dir($this->release_repo_dest)
-                     ->checkout($build_branch)
-                     ->run();
-             }
-             else {
-                 $this->taskExec( 'git checkout -b ' . $build_branch)
-                     ->dir($this->release_repo_dest)
-                     ->run();
-             }
+            chdir($this->release_repo_dest);
+            if(exec('git branch -a | grep origin/' . $build_branch)) {
+                $this->taskGitStack()
+                    ->dir($this->release_repo_dest)
+                    ->checkout($build_branch)
+                    ->run();
+            }
+            else {
+                $this->taskExec( 'git checkout -b ' . $build_branch)
+                    ->dir($this->release_repo_dest)
+                    ->run();
+            }
+
+            if($release_tag) {
+                $result = $this->taskGitStack()
+                    ->dir($this->project_repo_dest)
+                    ->checkout($release_tag)
+                    ->run();
+                if(!$result->wasSuccessful()) {
+                    exit(1);
+                }
+            }
         }
 
         return $this;

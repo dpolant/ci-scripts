@@ -69,17 +69,7 @@ trait Release
             case 'blackmesh':
                 $this->taskReleaseBuild()
                     ->releaseBuildDirectories()
-                    ->releaseGitCheckout($build_branch, $release_tag)
-                    ->run();
-
-                if($release_tag) {
-                    $result = $this->taskGitStack()
-                        ->dir($this->vm->getProjectRoot() . '/build/release_repo')
-                        ->checkout($release_tag)
-                        ->run();
-                }
-
-                $this->taskReleaseBuild()
+                    ->releaseGitCheckoutRelease($build_branch, $release_tag)
                     ->releaseComposerInstall();
                 break;
 
