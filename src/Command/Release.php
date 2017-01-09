@@ -65,6 +65,24 @@ trait Release
                     ->releaseCommit($release_tag);
                 break;
 
+            case 'generic':
+            case 'blackmesh':
+                $this->taskReleaseBuild()
+                    ->releaseBuildDirectories()
+                    ->releaseGitCheckout($build_branch, $release_tag)
+                    ->run();
+
+                if($release_tag) {
+                    $result = $this->taskGitStack()
+                        ->dir($this->vm->getProjectRoot() . '/build/release_repo')
+                        ->checkout($release_tag)
+                        ->run();
+                }
+
+                $this->taskReleaseBuild()
+                    ->releaseComposerInstall();
+                break;
+
             default:
                 break;
         }
