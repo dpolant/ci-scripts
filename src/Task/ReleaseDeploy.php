@@ -98,7 +98,6 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
                 ->delete()
                 ->verbose()
                 ->compress()
-                ->dryRun()
                 ->run();
 
         return $this;
