@@ -23,11 +23,24 @@ trait Release
      * Requires the following variables be set
      * for the project in config/config.yml:
      *
+     * Acquia -
+     *
      * project_repo: git@bitbucket.org:mediacurrent/mis_example.git
      * project_drupal_root: web
      * release_repo: development10@svn.devcloud.hosting.acquia.com:development.git
      * release_drupal_root: docroot
      * deploy_host: Acquia
+     *
+     * Pantheon -
+     *
+     * project_repo: git@bitbucket.org:mediacurrent/mis_example.git
+     * release_repo: ssh://codeserver.dev.xxx@codeserver.dev.xxx.drush.in:2222/~/repository.git
+     * deploy_host: Pantheon
+     *
+     * Hosts not deploying via git -
+     *
+     * release_repo: git@bitbucket.org:mediacurrent/drupal-project.git
+     * deploy_host: generic or Blackmesh, etc
      *
      * @param string $deploy_host Host for Deployment ( Acquia, Pantheon)
      * @param string $build_branch Branch to build
@@ -42,8 +55,7 @@ trait Release
             $deploy_host = $this->configuration['deploy_host'];
         }
 
-        if(empty($this->configuration['project_repo'])
-            || empty($this->configuration['release_repo'])
+        if(empty($this->configuration['release_repo'])
             || !$deploy_host) {
 
             $this->say('Configuration variables missing.  Consult help output.');
@@ -65,15 +77,11 @@ trait Release
                     ->releaseCommit($release_tag);
                 break;
 
-            case 'generic':
-            case 'blackmesh':
+            default:
                 $this->taskReleaseBuild()
                     ->releaseBuildDirectories()
                     ->releaseGitCheckoutRelease($build_branch, $release_tag)
                     ->releaseComposerInstall();
-                break;
-
-            default:
                 break;
         }
 
