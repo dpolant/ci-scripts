@@ -96,17 +96,24 @@ trait Release
      *
      *  pushes deploy release to remote
      *
-     * deploy_host: Acquia
-     *
      * Requires the following variables be set
      * for the project in config/config.yml:
+     *
+     * Acquia ( git, Pantheon)-
      *
      * project_repo: git@bitbucket.org:mediacurrent/mis_example.git
      * release_repo: development10@svn.devcloud.hosting.acquia.com:development.git
      * deploy_host: Acquia
      *
-     * @param string $deploy_host Host for Deployment ( Acquia, Pantheon)
-     * @param string $build_branch Branch to build
+     * Rsync -
+     *
+     * release_repo: git@bitbucket.org:mediacurrent/drupal-project.git
+     * release_host_user: username
+     * dev_release_host: server.example.com
+     * release_deploy_dest: "/var/www/htdocs"
+     *
+     * @param string $deploy_host Host for Deployment ( Acquia, Pantheon, rsync)
+     * @param string $build_branch Branch or environment to deploy
      * @param string $release_tag Optional label for release
      * @param array $opts
      *
@@ -125,8 +132,16 @@ trait Release
             switch (strtolower($deploy_host)) {
                 case 'acquia':
                 case 'git':
+                case 'pantheon':
                     $this->taskReleaseDeploy()
                         ->releaseDeployGit($build_branch, $release_tag)
+                        ->run();
+                    break;
+
+                case 'blackmesh':
+                case 'rsync':
+                    $this->taskReleaseDeploy()
+                        ->releaseDeployRsync($build_branch, $release_tag)
                         ->run();
                     break;
 

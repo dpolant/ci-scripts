@@ -7,6 +7,7 @@ use Robo\Result;
 class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
 {
 
+    use \Robo\Task\Remote\loadTasks;
     use \Robo\Task\Vcs\loadTasks;
 
     private $build_path;
@@ -66,6 +67,39 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
                 ->push( 'origin', $release_tag)
                 ->run();
         }
+
+        return $this;
+    }
+
+    public function releaseDeployRsync($deploy_env = null, $release_tag = null)
+    {
+
+        if(!empty($this->configuration[$deploy_env . '_release_host'])) {
+            $release_deploy_host = $this->configuration[$deploy_env . '_release_host'];
+        }
+        else {
+            $this->say('No matching release reploy host found');
+            return $this;
+        }
+
+        $this->release_repo_dest = $this->build_path . '/release_repo';
+
+        $drupal_webroot = (isset($this->configuration['drupal_webroot'])) ? $this->configuration['drupal_webroot'] : 'web';
+
+        $this->taskRsync()
+                ->fromPath($this->release_repo_dest . '/')
+                ->toHost($release_deploy_host)
+                ->toUser($this->configuration['release_host_user'])
+                ->toPath($this->configuration['release_deploy_dest'] . '/')
+                ->recursive()
+                ->option('links')
+                ->exclude($drupal_webroot . '/sites/default/files')
+                ->exclude($drupal_webroot . '/sites/default/settings.local.php')
+                ->delete()
+                ->verbose()
+                ->compress()
+                ->dryRun()
+                ->run();
 
         return $this;
     }
