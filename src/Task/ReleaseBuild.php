@@ -223,9 +223,8 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
                 ->from('/' . $this->project_drupal_root)
                 ->to('/' . $this->release_drupal_root)
                 ->run();
-
-            return $this;
         }
+        return $this;
     }
 
     public function releaseSyncProject()
