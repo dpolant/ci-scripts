@@ -301,7 +301,7 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
                 $commit_msg .= ' ' . $release_tag;
             }
             $commit_msg .= ' build at ' . date('c') . "\n";
-            $commit_msg .= $this->commit_msg;
+            $commit_msg .= str_replace( "'", "", $this->commit_msg);
 
             $this->taskGitStack()
                 ->dir($dir)
