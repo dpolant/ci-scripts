@@ -233,7 +233,6 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
             ->fromPath($this->project_repo_dest . '/')
             ->toPath($this->release_repo_dest . '/')
             ->recursive()
-            ->exclude('composer.lock')
             ->exclude('vendor')
             ->exclude('bin')
             ->exclude($this->project_drupal_root)
