@@ -30,18 +30,18 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
         $drushalias_dest = $this->getProjectRoot() . '/drush/' . $drushalias_filename;
         if (!is_file($drushalias_dest)) {
             $this->taskFileSystemStack()
-              ->copy($drushalias_source, $drushalias_dest)
-              ->run();
+                ->copy($drushalias_source, $drushalias_dest)
+                ->run();
             $this->taskReplaceInFile($drushalias_dest)
-              ->from('example.mcdev')
-              ->to($this->configuration['vagrant_hostname'])
-              ->run();
+                ->from('example.mcdev')
+                ->to($this->configuration['vagrant_hostname'])
+                ->run();
 
         }
 
         return $this;
     }
-    
+
     public function readme() {
 
         $readme_file = $this->getProjectRoot() . '/README.md';
@@ -81,7 +81,7 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
             $this->taskFileSystemStack()
                 ->copy($this->getProjectRoot() . '/tests/behat/behat.local.yml.example', $this->getProjectRoot() . '/tests/behat/behat.local.yml')
                 ->run();
-                $this->taskReplaceInFile($this->getProjectRoot() . '/tests/behat/behat.local.yml')
+            $this->taskReplaceInFile($this->getProjectRoot() . '/tests/behat/behat.local.yml')
                 ->from('base_url:')
                 ->to('base_url: http://' . $vagrant_hostname)
                 ->run();
@@ -92,30 +92,30 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
 
     public function vagrantConfig($vagrant_hostname = null, $vagrant_ip = null) {
         if($vagrant_hostname) {
-        $this->taskReplaceInFile($this->getVagrantConfig())
-            ->from('example.mcdev')
-            ->to($vagrant_hostname)
-            ->run();
-        $this->taskReplaceInFile($this->getVagrantConfig())
-            ->from('example_mcdev')
-            ->to(str_replace('.', '_', $vagrant_hostname))
-            ->run();
+            $this->taskReplaceInFile($this->getVagrantConfig())
+                ->from('example.mcdev')
+                ->to($vagrant_hostname)
+                ->run();
+            $this->taskReplaceInFile($this->getVagrantConfig())
+                ->from('example_mcdev')
+                ->to(str_replace('.', '_', $vagrant_hostname))
+                ->run();
         }
         if($vagrant_ip) {
-        $this->taskReplaceInFile($this->getVagrantConfig())
-            ->from('192.168.50.4')
-            ->to($vagrant_ip)
-            ->run();
+            $this->taskReplaceInFile($this->getVagrantConfig())
+                ->from('192.168.50.4')
+                ->to($vagrant_ip)
+                ->run();
         }
         return $this;
     }
 
     public function vmInit($drupalvm_package) {
         $this->taskVmInit()
-          ->drupalvmPackage($drupalvm_package)
-          ->configFile()
-          ->vagrantFile($drupalvm_package)
-          ->run();
+            ->drupalvmPackage($drupalvm_package)
+            ->configFile()
+            ->vagrantFile($drupalvm_package)
+            ->run();
 
         $this->loadDrupalVMConfiguration();
 
