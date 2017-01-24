@@ -113,7 +113,7 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
     public function vmInit($drupalvm_package) {
         $this->taskVmInit()
             ->drupalvmPackage($drupalvm_package)
-            ->configFile()
+            ->configFile($this->getVagrantSourceConfig())
             ->vagrantFile($drupalvm_package)
             ->run();
 
