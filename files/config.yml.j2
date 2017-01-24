@@ -1,0 +1,55 @@
+# This configuration file only contains the changes from the default.config.yml.
+# To see the available variables and the default values, examine the
+# vendor/mediacurrent/mis_vagrant/default.config.yml file.
+
+# If you need to run multiple instances of Drupal VM, set a unique hostname,
+# machine name, and IP address for each instance.
+vagrant_hostname: example.mcdev
+vagrant_machine_name: example_mcdev
+vagrant_ip: 192.168.50.4
+
+# The web server software to use. Can be either 'apache' or 'nginx'.
+drupalvm_webserver: apache
+
+drupal_mysql_user: root
+drupal_mysql_password: password
+
+# Settings for installing a Drupal site if 'install_site:' is 'true'.
+drupal_major_version: 8
+drupal_domain: "{{ vagrant_hostname }}"
+drupal_site_name: "Drupal"
+drupal_install_profile: config_installer
+drupal_enable_modules: [ 'devel' ]
+drupal_account_name: admin
+drupal_account_pass: admin
+drupal_composer_install_dir: "/home/vagrant/docroot"
+
+# Comment out any extra utilities you don't want to install. If you don't want
+# to install *any* extras, set this value to an empty set, e.g. `[]`.
+installed_extras:
+  - adminer
+  # - blackfire
+  - drupalconsole
+  - drush
+  # - elasticsearch
+  # - java
+  - mailhog
+  # - memcached
+  # - newrelic
+  # - nodejs
+  - npm
+  - pimpmylog
+  # - redis
+  # - ruby
+  # - selenium
+  # - solr
+  # - varnish
+  - xdebug
+  # - xhprof
+
+# PHP Configuration. Currently-supported versions: 5.6, 7.0, 7.1.
+# See version-specific notes: http://docs.drupalvm.com/en/latest/other/php/
+php_version: "7.0"
+
+# post_provision_scripts:
+#   - "{{ config_dir }}/../vendor/mediacurrent/mis_vagrant/examples/scripts/configure-solr.sh"

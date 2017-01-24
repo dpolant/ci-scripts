@@ -114,7 +114,7 @@ abstract class Base extends \Robo\Task\BaseTask
     }
 
     public function getVagrantSourceConfig() {
-        return $this->getProjectRoot() . '/vendor/' . $this->drupalvm_package . '/' . $this->config_source_filename;
+        return $this->getVendorDir() . '/mediacurrent/ci-scripts/files/config.yml.j2';
     }
 
     public function getDrupalVMConfigValue($variable_name) {
