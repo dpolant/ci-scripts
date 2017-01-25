@@ -11,6 +11,7 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
     use \Robo\Task\Vcs\loadTasks;
 
     private $build_path;
+    private $error_code;
     private $release_repo_dest;
 
     public function __construct()
@@ -55,17 +56,21 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
         }
 
         if(exec('ls -1 ' . $this->release_repo_dest . '/.git')) {
-            $this->taskGitStack()
+            $result = $this->taskGitStack()
                 ->dir($this->release_repo_dest)
                 ->push( 'origin', $build_branch)
                 ->run();
         }
 
-        if($release_tag) {
-            $this->taskGitStack()
+        if($release_tag && $result->wasSuccessful()) {
+            $result = $this->taskGitStack()
                 ->dir($this->release_repo_dest)
                 ->push( 'origin', $release_tag)
                 ->run();
+        }
+
+        if(!$result->wasSuccessful()) {
+            $this->error_code = 1;
         }
 
         return $this;
@@ -86,7 +91,7 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
 
         $drupal_webroot = (isset($this->configuration['drupal_webroot'])) ? $this->configuration['drupal_webroot'] : 'web';
 
-        $this->taskRsync()
+        $result = $this->taskRsync()
                 ->fromPath($this->release_repo_dest . '/')
                 ->toHost($release_deploy_host)
                 ->toUser($this->configuration['release_host_user'])
@@ -100,6 +105,10 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
                 ->compress()
                 ->run();
 
+        if(!$result->wasSuccessful()) {
+            $this->error_code = 1;
+        }
+
         return $this;
     }
 
@@ -112,7 +121,7 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
         $this->stopTimer();
         return new Result(
             $this,
-            0,
+            $this->error_code,
             'ReleaseDeploy',
             ['time' => $this->getExecutionTime()]
         );
