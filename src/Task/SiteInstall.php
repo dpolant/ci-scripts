@@ -28,7 +28,7 @@ class SiteInstall extends \Mediacurrent\CiScripts\Task\Base
             $dbconnection_string = $this->configuration['drupal_db_user'] .':' . $this->configuration['drupal_db_password'] . '@localhost/' . $this->configuration['vagrant_machine_name'];
         }
 
-        $this->taskDrushStack($this->getDrush())
+        $result = $this->taskDrushStack($this->getDrush())
             ->siteAlias('@' . $this->configuration['vagrant_hostname'])
             ->sitesSubdir($this->configuration['vagrant_hostname'])
             ->mysqlDbUrl($dbconnection_string)
@@ -42,7 +42,7 @@ class SiteInstall extends \Mediacurrent\CiScripts\Task\Base
         $this->stopTimer();
         return new Result(
             $this,
-            0,
+            $result->getExitCode(),
             'SiteInstall',
             ['time' => $this->getExecutionTime()]
         );

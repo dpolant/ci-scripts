@@ -14,12 +14,12 @@ use Robo\Common\Timer;
 class VmConfig extends \Mediacurrent\CiScripts\Task\Base
 {
     use Timer;
- 
+
     private $vagrant_hostname;
     private $vagrant_ip;
 
     public function __construct($vagrant_hostname = null, $vagrant_ip = null) {
-      
+
         $this->vagrant_hostname = $vagrant_hostname;
         $this->vagrant_ip = $vagrant_ip;
     }

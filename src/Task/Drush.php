@@ -68,18 +68,18 @@ class Drush extends \Mediacurrent\CiScripts\Task\Base
         $this->printTaskInfo($command);
         $webroot = (isset($this->configuration['drupal_webroot'])) ? $this->configuration['drupal_webroot'] : 'web';
         if($this->useVagrant()) {
-            $this->taskSshExec($this->configuration['vagrant_hostname'], 'vagrant')
+            $result = $this->taskSshExec($this->configuration['vagrant_hostname'], 'vagrant')
                 ->remoteDir($this->configuration['drupal_composer_install_dir'] . '/' . $webroot. '/')
                 ->exec($command)
                 ->identityFile('~/.vagrant.d/insecure_private_key')
                 ->run();
         }
         else {
-            $this->taskExec($command)->run();
+            $result = $this->taskExec($command)->run();
         }
         return new Result(
             $this,
-            0,
+            $result->getExitCode(),
             'Drupal Drush',
             ['time' => $this->getExecutionTime()]
         );

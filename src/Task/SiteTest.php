@@ -46,6 +46,8 @@ class SiteTest extends \Mediacurrent\CiScripts\Task\Base
         $cmd = $this->getVendorBin() . '/behat';
 
         $result = $this->taskExec($cmd)->run();
+        $this->exit_code = $result->getExitCode();
+
         return $this;
     }
 
@@ -58,7 +60,9 @@ class SiteTest extends \Mediacurrent\CiScripts\Task\Base
 
         $cmd = 'pa11y --standard=WCAG2AA --ignore=WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail ' . $uri;
 
-        $this->taskExec($cmd)->run();
+        $result = $this->taskExec($cmd)->run();
+        $this->exit_code = $result->getExitCode();
+
         return $this;
     }
 
@@ -85,7 +89,8 @@ class SiteTest extends \Mediacurrent\CiScripts\Task\Base
 
         $cmd = $phpcs . ' --standard=Drupal --extensions=php,module,inc,install,test,profile,theme ' . $test_dir;
 
-        $this->taskExec($cmd)->run();
+        $result = $this->taskExec($cmd)->run();
+        $this->exit_code = $result->getExitCode();
 
         return $this;
     }
@@ -97,7 +102,7 @@ class SiteTest extends \Mediacurrent\CiScripts\Task\Base
             $test_dir = $this->getProjectRoot() . '/tests';
         }
 
-        $this->taskPHPUnit($this->getVendorBin() . '/phpunit')
+        $result = $this->taskPHPUnit($this->getVendorBin() . '/phpunit')
           ->option('disallow-test-output')
           ->option('report-useless-tests')
           ->option('strict-coverage')
@@ -105,6 +110,7 @@ class SiteTest extends \Mediacurrent\CiScripts\Task\Base
           ->option('-d error_reporting=-1')
           ->arg($test_dir)
           ->run();
+        $this->exit_code = $result->getExitCode();
 
         return $this;
     }
