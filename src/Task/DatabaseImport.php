@@ -33,10 +33,11 @@ class DatabaseImport extends \Mediacurrent\CiScripts\Task\Base
         if(is_file($this->getProjectRoot() . '/' . $this->database_file)) {
             $database_file_path = $this->configuration['drupal_composer_install_dir'] . '/' . $this->database_file;
 
-            $this->taskDrush()
+            $result = $this->taskDrush()
                 ->drushCommand('sqlc')
                 ->drushOptions('< ' . $database_file_path)
                 ->run();
+            $exit_code = $result->getExitCode();
         }
         else {
             $this->printTaskError('Database file ' . $this->getProjectRoot() . '/' . $this->database_file . ' not found.');

@@ -70,7 +70,7 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
         }
 
         if(!$result->wasSuccessful()) {
-            $this->error_code = 1;
+            $this->error_code = $result->getExitCode();
         }
 
         return $this;
@@ -106,7 +106,7 @@ class ReleaseDeploy extends \Mediacurrent\CiScripts\Task\Base
                 ->run();
 
         if(!$result->wasSuccessful()) {
-            $this->error_code = 1;
+            $this->error_code = $result->getExitCode();
         }
 
         return $this;

@@ -70,20 +70,20 @@ class Console extends \Mediacurrent\CiScripts\Task\Base
         $webroot = (isset($this->configuration['drupal_webroot'])) ? $this->configuration['drupal_webroot'] : 'web';
 
         if($this->useVagrant()) {
-            $this->taskSshExec($this->configuration['vagrant_hostname'], 'vagrant')
+            $result = $this->taskSshExec($this->configuration['vagrant_hostname'], 'vagrant')
                 ->remoteDir($this->configuration['drupal_composer_install_dir'] . '/' . $webroot. '/')
                 ->exec($command)
                 ->identityFile('~/.vagrant.d/insecure_private_key')
                 ->run();
         }
         else {
-            $this->taskExec($command)
+            $result = $this->taskExec($command)
                 ->dir($this->configuration['drupal_composer_install_dir'] . '/' . $webroot. '/')
                 ->run();
         }
         return new Result(
             $this,
-            0,
+            $result->getExitCode(),
             'Drupal Console',
             ['time' => $this->getExecutionTime()]
         );
