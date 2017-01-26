@@ -79,8 +79,8 @@ trait Site
 
           ->composerInstall()
           ->vagrantUp()
-          ->configImport()
           ->updateDB()
+          ->configImport()
           ->run();
     }
 }
