@@ -83,6 +83,11 @@ EOF;
                 ->text($text)
                 ->replace("\n<?php\n", '')
                 ->run();
+
+            $this->taskWriteToFile($site_directory . '/services.yml')
+                ->textFromFile($this->getProjectRoot() . '/' . $webroot . '/sites/default/default.services.yml')
+                ->replace("debug: false", 'debug: true')
+                ->run();
         }
 
         $this->taskSiteInstall()->run();
