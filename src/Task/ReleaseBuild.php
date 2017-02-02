@@ -219,7 +219,7 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
                 ->to($this->release_drupal_root . '/')
                 ->run();
 
-            $this->taskReplaceInFile($this->release_repo_dest . '/scripts/composer/    ScriptHandler.php')
+            $this->taskReplaceInFile($this->release_repo_dest . '/scripts/composer/ScriptHandler.php')
                 ->from('/' . $this->project_drupal_root)
                 ->to('/' . $this->release_drupal_root)
                 ->run();
