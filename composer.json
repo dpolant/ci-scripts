@@ -14,12 +14,5 @@
         "psr-4": {
             "Mediacurrent\\CiScripts\\": "src"
         }
-    },
-    "extra": {
-        "patches": {
-            "drush/drush": {
-                "https://github.com/drush-ops/drush/issues/2285": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/2286.patch"
-            }
-        }
     }
 }
