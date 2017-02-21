@@ -1,6 +1,8 @@
 <?php
 
-class ConsoleTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ConsoleTest extends TestCase
 {
     use \Mediacurrent\CiScripts\Task\loadTasks;
 

@@ -1,6 +1,8 @@
 <?php
 
-class DrushTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class DrushTest extends TestCase
 {
     use \Mediacurrent\CiScripts\Task\loadTasks;
 

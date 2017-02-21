@@ -128,6 +128,7 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         else {
             $this->taskGitStack()
                 ->cloneRepo($this->configuration['project_repo'], $this->project_repo_dest)
+                ->dir($this->project_repo_dest)
                 ->checkout($build_branch)
                 ->run();
         }
