@@ -200,7 +200,7 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
 
             if($release_tag) {
                 $result = $this->taskGitStack()
-                    ->dir($this->project_repo_dest)
+                    ->dir($this->release_repo_dest)
                     ->checkout($release_tag)
                     ->run();
                 if(!$result->wasSuccessful()) {
