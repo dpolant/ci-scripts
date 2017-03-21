@@ -134,6 +134,10 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         }
 
         if($release_tag) {
+            $this->taskExec( 'git fetch --tags')
+                ->dir($this->project_repo_dest)
+                ->run();
+
             $result = $this->taskGitStack()
                 ->dir($this->project_repo_dest)
                 ->checkout($release_tag)
@@ -201,10 +205,16 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         }
 
         if($release_tag) {
-            $result = $this->taskGitStack()
-                ->dir($this->release_repo_dest)
-                ->checkout($release_tag)
-                ->run();
+            $this->taskExec( 'git fetch --tags')
+                    ->dir($this->release_repo_dest)
+                    ->run();
+
+            if(exec('git tag | grep ' . $release_tag)) {
+                $result = $this->taskGitStack()
+                    ->dir($this->release_repo_dest)
+                    ->checkout($release_tag)
+                    ->run();
+            }
             if(!$result->wasSuccessful()) {
                 exit(1);
             }
