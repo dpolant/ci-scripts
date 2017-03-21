@@ -134,6 +134,10 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         }
 
         if($release_tag) {
+            $this->taskExec( 'git fetch --tags')
+                ->dir($this->project_repo_dest)
+                ->run();
+
             $result = $this->taskGitStack()
                 ->dir($this->project_repo_dest)
                 ->checkout($release_tag)
