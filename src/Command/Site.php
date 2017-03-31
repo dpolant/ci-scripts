@@ -45,6 +45,17 @@ trait Site
      *
      * site:test runs the requested tests on the site
      *
+     * Options:
+     *
+     * --phpcs
+     * Run Drupal coding standards via code sniiffer.
+     *
+     * Accepts an argument that contains the absolute path to the directory
+     * to be tested.  Defaults to "modules/custom".
+     *
+     * Example usage:
+     *   "--phpcs $(pwd)/web/profiles/custom"
+     *
      * @param array $opts
      * @option $behat Run behat tests.
      * @option $pa11y Run pa11y accessibility tests.

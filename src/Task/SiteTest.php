@@ -80,14 +80,7 @@ class SiteTest extends \Mediacurrent\CiScripts\Task\Base
 
         $phpcs = $this->getVendorBin() . '/phpcs';
 
-        $result = $this->executeCommand($phpcs . ' --config-show');
-        $value = $result->getMessage();
-
-        if(!strpos($value, 'coder_sniffer')) {
-            $this->taskExec($phpcs . ' --config-set installed_paths ' . $this->getVendorDir() . '/drupal/coder/coder_sniffer')->run();
-        }
-
-        $cmd = $phpcs . ' --standard=Drupal --extensions=php,module,inc,install,test,profile,theme ' . $test_dir;
+        $cmd = $phpcs . ' --standard=' . $this->getVendorDir() . '/drupal/coder/coder_sniffer/Drupal --extensions=php,module,inc,install,test,profile,theme ' . $test_dir;
 
         $result = $this->taskExec($cmd)->run();
         $this->exit_code = $result->getExitCode();
