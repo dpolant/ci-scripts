@@ -167,19 +167,19 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
             $local_branch = exec('git branch | grep ' . $build_branch);
             $remote_branch = exec('git branch -a | grep origin/' . $build_branch);
             if($local_branch || $remote_branch) {
-                $this->taskGitStack()
+                $result = $this->taskGitStack()
                     ->dir($this->release_repo_dest)
                     ->checkout($build_branch)
                     ->run();
                 if($remote_branch) {
-                    $this->taskGitStack()
+                    $result = $this->taskGitStack()
                         ->dir($this->release_repo_dest)
                         ->pull( 'origin', $build_branch)
                         ->run();
                 }
             }
             else {
-                $this->taskExec( 'git checkout -b ' . $build_branch)
+                $result = $this->taskExec( 'git checkout -b ' . $build_branch)
                     ->dir($this->release_repo_dest)
                     ->run();
             }
@@ -191,21 +191,24 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
 
             chdir($this->release_repo_dest);
             if(exec('git branch -a | grep origin/' . $build_branch)) {
-                $this->taskGitStack()
+                $result = $this->taskGitStack()
                     ->dir($this->release_repo_dest)
                     ->checkout($build_branch)
                     ->run();
             }
             else {
-                $this->taskExec( 'git checkout -b ' . $build_branch)
+                $result = $this->taskExec( 'git checkout -b ' . $build_branch)
                     ->dir($this->release_repo_dest)
                     ->run();
             }
 
         }
+        if(!$result->wasSuccessful()) {
+            exit(1);
+        }
 
         if($release_tag) {
-            $this->taskExec( 'git fetch --tags')
+            $result = $this->taskExec( 'git fetch --tags')
                     ->dir($this->release_repo_dest)
                     ->run();
 
@@ -273,9 +276,13 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
     public function releaseComposerInstall() {
         $composer_cmd = 'composer install --no-ansi --no-dev --no-interaction --no-progress --prefer-dist --optimize-autoloader';
 
-        $this->taskExec($composer_cmd)
+        $result = $this->taskExec($composer_cmd)
             ->dir($this->release_repo_dest)
             ->run();
+
+        if(!$result->wasSuccessful()) {
+            exit(1);
+        }
 
         return $this;
     }
