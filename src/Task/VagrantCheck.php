@@ -72,7 +72,7 @@ class VagrantCheck extends \Mediacurrent\CiScripts\Task\Base
           ->run();
         $value = $result->getMessage();
 
-        if(!strpos($value, 'vagrant-hostsupdater')) {
+        if(!strpos($value, 'hostsupdater')) {
             $this->say('Recommended plugin Vagrant Hostsupdater not found.');
             $this->say('More information: https://github.com/cogitatio/vagrant-hostsupdater');
             if($this->confirm('Install vagrant-hostsupdater plugin now?')) {
