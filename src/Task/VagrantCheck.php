@@ -83,17 +83,6 @@ class VagrantCheck extends \Mediacurrent\CiScripts\Task\Base
             }
         }
 
-        if(!strpos($value, 'cachier')) {
-            $this->say('Recommended plugin Vagrant Cachier not found.');
-            $this->say('More information: http://fgrehm.viewdocs.io/vagrant-cachier/');
-            if($this->confirm('Install vagrant-cachier plugin now?')) {
-                $this->taskVagrantPlugin()
-                  ->install()
-                  ->arg('vagrant-cachier')
-                  ->run();
-            }
-        }
-
         if(!strpos($value, 'vbguest')) {
             $this->say('Recommended plugin Vagrant VBGuest not found.');
             $this->say('More information: https://github.com/dotless-de/vagrant-vbguest');
