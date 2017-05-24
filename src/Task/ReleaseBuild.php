@@ -179,15 +179,19 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
                 }
             }
             else {
-                $result = $this->taskExec( 'git checkout -b ' . $build_branch)
+                $result = $this->taskExec('git checkout -b ' . $build_branch)
                     ->dir($this->release_repo_dest)
                     ->run();
             }
         }
         else {
-            $this->taskGitStack()
+            $result = $this->taskGitStack()
                 ->cloneRepo($this->configuration['release_repo'], $this->release_repo_dest)
                 ->run();
+
+            if(!$result->wasSuccessful()) {
+                exit(1);
+            }
 
             chdir($this->release_repo_dest);
             if(exec('git branch -a | grep origin/' . $build_branch)) {
