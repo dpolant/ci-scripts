@@ -154,8 +154,12 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         return $this;
     }
 
-    public function releaseGitCheckoutRelease($build_branch = null, $release_tag = null)
+    public function releaseGitCheckoutRelease($build_branch = null, $release_tag = null, $release_repo = null)
     {
+
+        if(!$release_repo) {
+            $release_repo = $this->configuration['release_repo'];
+        }
 
         if(!$build_branch) {
             $build_branch = $this->configuration['build_branch'];
@@ -186,7 +190,7 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
         }
         else {
             $result = $this->taskGitStack()
-                ->cloneRepo($this->configuration['release_repo'], $this->release_repo_dest)
+                ->cloneRepo($release_repo, $this->release_repo_dest)
                 ->run();
 
             if(!$result->wasSuccessful()) {
