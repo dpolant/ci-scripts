@@ -92,7 +92,7 @@ class SiteTest extends \Mediacurrent\CiScripts\Task\Base
     {
 
         if(!$test_dir) {
-            $test_dir = $this->getProjectRoot() . '/tests';
+            $test_dir = $this->getWebRoot() . '/modules/custom';
         }
 
         $result = $this->taskPHPUnit($this->getVendorBin() . '/phpunit')
@@ -101,6 +101,7 @@ class SiteTest extends \Mediacurrent\CiScripts\Task\Base
           ->option('strict-coverage')
           ->option('-v')
           ->option('-d error_reporting=-1')
+          ->configFile($this->getProjectRoot() . '/tests/phpunit/phpunit.xml')
           ->arg($test_dir)
           ->run();
         $this->exit_code = $result->getExitCode();
