@@ -48,7 +48,7 @@ trait Release
      *
      * @return object Result
      */
-    public function releaseBuild($deploy_host = null, $build_branch = 'develop', $release_tag = null)
+    public function releaseBuild($deploy_host = null, $build_branch = 'master', $release_tag = null)
     {
 
         if(!$deploy_host && !empty($this->configuration['deploy_host'])) {
@@ -121,7 +121,7 @@ trait Release
      *
      * @return object Result
      */
-    public function releaseDeploy($deploy_host = null, $build_branch = 'develop', $release_tag = null, $opts = ['yes|y' => false])
+    public function releaseDeploy($deploy_host = null, $build_branch = 'master', $release_tag = null, $opts = ['yes|y' => false])
     {
         if ( $opts['yes'] || $this->confirm("Deploy release now. Are you sure?")) {
 
