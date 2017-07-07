@@ -1,5 +1,5 @@
 {
-    "name": "mediacurrent/ci-scripts",
+    "name": "dpolant/ci-scripts",
     "description": "Scripts helpful for testing a Drupal site on a Continuous-Integration server, or locally.",
     "bin": ["bin/hobson"],
     "require": {
