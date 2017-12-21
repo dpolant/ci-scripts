@@ -4,7 +4,7 @@
     "bin": ["bin/hobson"],
     "require": {
         "joestewart/robo-drupalvm": "~1.0.0",
-        "joestewart/robo-vagrant": "^0.1.6"
+        "joestewart/robo-vagrant": "~1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=4.4"
