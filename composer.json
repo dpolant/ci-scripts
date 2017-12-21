@@ -3,7 +3,7 @@
     "description": "Scripts helpful for testing a Drupal site on a Continuous-Integration server, or locally.",
     "bin": ["bin/hobson"],
     "require": {
-        "joestewart/robo-drupalvm": "^1",
+        "joestewart/robo-drupalvm": "~1.0.0",
         "joestewart/robo-vagrant": "^0.1.6"
     },
     "require-dev": {
